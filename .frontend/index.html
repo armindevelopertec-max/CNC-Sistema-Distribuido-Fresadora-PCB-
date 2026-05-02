@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CNC Fresadora - Selección de Modo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="home">
+  <nav class="main-nav">
+    <div class="logo">CNC-Fresadora</div>
+    <div class="nav-links">
+      <a href="index.html" class="active">Inicio</a>
+    </div>
+  </nav>
+
+  <div class="home">
+    <section class="hero">
+      <h1>¿Cómo vas a usar el sistema hoy?</h1>
+      <p>Selecciona un modo de operación para adaptar la interfaz a tus necesidades.</p>
+    </section>
+
+    <section class="mode-selection-grid">
+      <article class="mode-card" data-mode="printshop">
+        <div class="mode-icon">🏭</div>
+        <h3>Centro de Prototipado</h3>
+        <p class="mode-tag">Modo Print-Shop</p>
+        <p>Rápido y transaccional. Enfocado en subir, pagar y fabricar. Interfaz simplificada con costos en tiempo real.</p>
+        <a href="panel.html?mode=printshop" class="btn">Entrar como Cliente</a>
+      </article>
+
+      <article class="mode-card" data-mode="education">
+        <div class="mode-icon">🎓</div>
+        <h3>Modo Educativo</h3>
+        <p class="mode-tag">Academia</p>
+        <p>Control guiado paso a paso. Ideal para aprender los conceptos de CAM, herramientas y trayectorias con seguridad.</p>
+        <a href="panel.html?mode=education" class="btn">Entrar a Aprender</a>
+      </article>
+
+      <article class="mode-card" data-mode="saas">
+        <div class="mode-icon">🧠</div>
+        <h3>Micro-fábrica Pro</h3>
+        <p class="mode-tag">Operador Avanzado</p>
+        <p>Control total, gestión de múltiples trabajos, logs de producción y parámetros avanzados de fabricación.</p>
+        <a href="panel.html?mode=saas" class="btn">Panel de Operador</a>
+      </article>
+    </section>
+  </div>
+
+  <footer>
+    <p>Arquitectura modular: Selecciona tu entorno de trabajo según el perfil de negocio.</p>
+  </footer>
+
+  <script src="script.js" type="module"></script>
+</body>
+</html>

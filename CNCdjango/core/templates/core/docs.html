@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CNC Fresadora - Documentación</title>
+  <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+</head>
+<body data-page="docs">
+  <nav class="main-nav">
+    <div class="logo">CNC-Fresadora</div>
+    <div class="nav-links">
+      <a href="{% url 'index' %}">Inicio</a>
+      <a href="{% url 'panel' %}">Panel</a>
+      <a href="{% url 'docs' %}" class="active">Documentación</a>
+    </div>
+    <div class="nav-actions">
+      <span class="nav-serial" id="nav-serial-status">Serial · --</span>
+    </div>
+  </nav>
+
+  <div class="app-shell">
+    <div class="home" style="max-width: 900px; text-align: left;">
+      <section class="card" style="margin-top: 2rem; padding: 3rem;">
+        <h1 style="color: var(--accent); font-size: 2.5rem; margin-bottom: 1.5rem;">Documentación del Sistema</h1>
+        <p style="font-size: 1.1rem; color: #cbd5f5; margin-bottom: 2rem;">Guía completa para el uso de la fresadora CNC de PCBs.</p>
+
+        <section style="margin: 2rem 0; padding: 1.75rem; border-radius: 1.25rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);">
+          <h2 style="color: var(--accent); margin-top: 0;">Arquitectura modular</h2>
+          <p style="color: #cbd5f5; margin-bottom: 1.5rem;">Interfaz web -> servidor de aplicación -> CNC GRBL.</p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; align-items: stretch;">
+            <div style="padding: 1rem; border-radius: 1rem; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255, 255, 255, 0.08);">
+              <strong style="display: block; color: #fff; margin-bottom: 0.5rem;">Interfaz web</strong>
+              <span style="color: #94a3b8;">Carga Gerbers, configura el CAM y controla el flujo desde el navegador.</span>
+            </div>
+            <div style="padding: 1rem; border-radius: 1rem; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255, 255, 255, 0.08);">
+              <strong style="display: block; color: #fff; margin-bottom: 0.5rem;">Servidor de aplicación</strong>
+              <span style="color: #94a3b8;">Valida archivos, genera G-code y expone la API del sistema.</span>
+            </div>
+            <div style="padding: 1rem; border-radius: 1rem; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255, 255, 255, 0.08);">
+              <strong style="display: block; color: #fff; margin-bottom: 0.5rem;">CNC GRBL</strong>
+              <span style="color: #94a3b8;">Ejecuta las trayectorias y reporta el estado de la máquina.</span>
+            </div>
+          </div>
+        </section>
+
+        <h2 style="color: #fff; margin-top: 2rem;">1. Preparación de Archivos</h2>
+        <p>El sistema requiere archivos Gerber estándar generados desde tu software de diseño (KiCad, Eagle, Proteus, etc.).</p>
+        <ul style="color: #94a3b8; line-height: 2;">
+          <li><strong>.gb1:</strong> Capa de pistas (Front Copper). Es el archivo obligatorio.</li>
+          <li><strong>.gb0:</strong> Capa de contorno (Edge Cuts). Para el corte final de la placa.</li>
+          <li><strong>.gb2:</strong> Capa de pads (Drill/Pads). Para perforaciones o marcas.</li>
+        </ul>
+
+        <h2 style="color: #fff; margin-top: 2rem;">2. Flujo de Trabajo</h2>
+        <ol style="color: #94a3b8; line-height: 2;">
+          <li><strong>Importar:</strong> Arrastra tus archivos al panel de carga. El sistema los reconocerá automáticamente.</li>
+          <li><strong>CAM / Prep:</strong> Ajusta los parámetros de fabricación como profundidad, velocidad y diámetro de herramienta.</li>
+          <li><strong>Simulación:</strong> Verifica visualmente las trayectorias en el visor 3D antes de fabricar.</li>
+          <li><strong>Ejecución:</strong> Envía las capas una por una a la máquina CNC.</li>
+        </ol>
+
+        <h2 style="color: #fff; margin-top: 2rem;">3. Parámetros Recomendados</h2>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Operación</th>
+                <th>Profundidad</th>
+                <th>Herramienta</th>
+                <th>Avance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Trazas</td>
+                <td>-0.06 mm</td>
+                <td>0.1 mm (V-Bit)</td>
+                <td>120 mm/min</td>
+              </tr>
+              <tr>
+                <td>Contorno</td>
+                <td>-1.60 mm</td>
+                <td>0.8 mm (Fresa)</td>
+                <td>80 mm/min</td>
+              </tr>
+              <tr>
+                <td>Pads</td>
+                <td>-0.06 mm</td>
+                <td>0.1 mm</td>
+                <td>120 mm/min</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top: 3rem; padding: 1.5rem; border-left: 4px solid var(--accent); background: rgba(165, 180, 252, 0.05);">
+          <strong style="color: var(--accent);">Nota de Seguridad:</strong> Asegúrate siempre de que el puerto serial esté conectado antes de iniciar la ejecución y mantén el botón de parada de emergencia a mano.
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 CNC-Fresadora PCB - Documentación Técnica</p>
+  </footer>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script src="{% static 'core/script-v2.js' %}" type="module"></script>
+</body>
+</html>

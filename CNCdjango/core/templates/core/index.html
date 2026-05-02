@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CNC Fresadora - Selección de Modo</title>
+  <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+</head>
+<body data-page="home">
+  <nav class="main-nav">
+    <div class="logo">CNC-Fresadora</div>
+    <div class="nav-links">
+      <a href="{% url 'index' %}" class="active">Inicio</a>
+      <a href="{% url 'panel' %}">Panel</a>
+      <a href="{% url 'docs' %}">Documentación</a>
+    </div>
+    <div class="nav-actions">
+      <span class="nav-serial" id="nav-serial-status">Serial · --</span>
+    </div>
+  </nav>
+
+  <div class="home">
+    <section class="hero">
+      <h1>Sistema de Fabricación Distribuida</h1>
+      <p>Conecta tu flujo de diseño directamente con la línea de producción.</p>
+      
+      <div id="network-info" style="margin-top: 1.5rem; padding: 1rem; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 1rem; display: inline-block;">
+        <span style="color: #4ade80; font-weight: 600;">🌐 Servidor Activo en Red Local:</span>
+        <code id="local-ip-display" style="background: #000; padding: 0.3rem 0.6rem; border-radius: 0.4rem; margin-left: 0.5rem; color: #fff;">Cargando IP...</code>
+      </div>
+    </section>
+
+    <section class="mode-selection-grid">
+      <article class="mode-card" data-mode="printshop" id="card-designer">
+        <div class="mode-icon">📡</div>
+        <h3>DISEÑADOR: CNC COMPARTIDO</h3>
+        <p class="mode-tag">Acceso Remoto</p>
+        <p>Envía tus diseños directamente a la fresadora a través de la red local. El operador recibirá tu trabajo en la cola de producción.</p>
+        <a href="{% url 'panel' %}?mode=printshop" class="btn">Enviar a Fabricación</a>
+      </article>
+
+      <article class="mode-card" data-mode="saas" id="card-operator">
+        <div class="mode-icon">🏗️</div>
+        <h3>OPERADOR: CNC COMPARTIDO</h3>
+        <p class="mode-tag">Control de Planta</p>
+        <p>Administra los trabajos recibidos desde la red, configura los parámetros de corte y supervisa la ejecución física de la CNC.</p>
+        <a href="{% url 'panel' %}?mode=saas" class="btn">Gestionar Producción</a>
+      </article>
+
+      <article class="mode-card" data-mode="education" id="card-local">
+        <div class="mode-icon">💻</div>
+        <h3>LOCAL</h3>
+        <p class="mode-tag">Estación Única</p>
+        <p>Flujo de trabajo integrado para cuando el diseño y la fabricación se realizan en esta misma computadora.</p>
+        <a href="{% url 'panel' %}?mode=education" class="btn">Iniciar Trabajo Local</a>
+      </article>
+    </section>
+  </div>
+
+  <footer>
+  </footer>
+
+  <script>
+    // Script simple para detección de roles que no depende de módulos externos
+    document.addEventListener('DOMContentLoaded', () => {
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const ipDisplay = document.getElementById('local-ip-display');
+        
+        if (ipDisplay) ipDisplay.textContent = window.location.host;
+
+        const cardDesigner = document.getElementById('card-designer');
+        const cardOperator = document.getElementById('card-operator');
+        const cardLocal = document.getElementById('card-local');
+
+        if (isLocal) {
+            if (cardDesigner) cardDesigner.style.display = 'none';
+        } else {
+            if (cardOperator) cardOperator.style.display = 'none';
+            if (cardLocal) cardLocal.style.display = 'none';
+        }
+    });
+  </script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script src="{% static 'core/script-v2.js' %}" type="module"></script>
+</body>
+</html>

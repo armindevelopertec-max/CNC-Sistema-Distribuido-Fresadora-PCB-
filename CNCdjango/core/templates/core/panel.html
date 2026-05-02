@@ -1,0 +1,435 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CNC Fresadora - Panel</title>
+  <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+</head>
+<body data-page="panel" data-mode="{{ request.GET.mode|default:'saas' }}">
+  <nav class="main-nav">
+    <div class="logo">CNC-Fresadora</div>
+    <div class="nav-links">
+      <a href="{% url 'index' %}">Inicio</a>
+      <a href="{% url 'panel' %}" class="active">Panel</a>
+      <a href="{% url 'docs' %}">Documentación</a>
+    </div>
+    <div class="nav-actions">
+      <span class="nav-serial" id="nav-serial-status">Serial · --</span>
+    </div>
+  </nav>
+
+  <div class="app-shell">
+    <nav class="workflow-nav">
+      <div class="step-item active" data-step-target="1">
+        <span class="step-number">1</span>
+        <span class="step-label">Importar</span>
+      </div>
+      <div class="step-item" data-step-target="2" id="nav-step-nest">
+        <span class="step-number">2</span>
+        <span class="step-label">Panelización</span>
+      </div>
+      <div class="step-item" data-step-target="3" id="nav-step-cam">
+        <span class="step-number">3</span>
+        <span class="step-label">CAM / Prep</span>
+      </div>
+      <div class="step-item" data-step-target="4" id="nav-step-sim">
+        <span class="step-number">4</span>
+        <span class="step-label">Simulación</span>
+      </div>
+      <div class="step-item" data-step-target="5" id="nav-step-exec">
+        <span class="step-number">5</span>
+        <span class="step-label">Ejecución</span>
+      </div>
+    </nav>
+
+    <main id="workflow-container">
+      <!-- PASO 1: RECEPCIÓN / COLA DE TRABAJO -->
+      <section class="workflow-step active" id="step-1">
+        <div class="grid-panel">
+          <!-- Vista para el Diseñador y Modo Local (Solo Carga) -->
+          <article class="card upload-card" data-mode-only-list="printshop,education">
+            <div class="card-header">
+              <h2>Preparar proyecto PCB</h2>
+              <span class="badge">Carga</span>
+            </div>
+            <p class="card-description">Sube tus archivos Gerber para iniciar el procesamiento.</p>
+            <form id="upload-form">
+              <div style="margin-bottom: 1.5rem;" data-mode-only="printshop">
+                <label for="user-alias"><strong>Tu nombre o alias</strong></label>
+                <input id="user-alias" name="alias" type="text" placeholder="Ej: Juan Pérez" style="width: 100%;">
+              </div>
+
+              <div class="upload-zone" id="drop-zone">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">
+                  <strong>Arrastra tus archivos aquí</strong>
+                  <p>.gb1 (obligatorio), .gb0, .gb2</p>
+                </div>
+                <input id="file-input" name="gerber_files" type="file" accept=".gb0,.gb1,.gb2" multiple required style="display: none;">
+                <button type="button" class="btn secondary" onclick="document.getElementById('file-input').click()">Buscar archivos</button>
+              </div>
+              
+              <div id="file-list-preview" class="file-list-preview"></div>
+              <button type="submit" class="btn" id="submit-project-btn" style="width: 100%; margin-top: 1rem;" disabled>Preparar e iniciar</button>
+              <p class="feedback" id="upload-feedback"></p>
+            </form>
+          </article>
+
+          <!-- Vista para el Operador (Server) - Solo Cola -->
+          <article class="card queue-card" data-mode-only="saas">
+            <div class="card-header">
+              <h2>Cola de Producción</h2>
+              <span class="badge info" id="queue-count">0 Pendientes</span>
+            </div>
+            <p class="card-description">Trabajos recibidos desde la red local listos para procesar.</p>
+            <div class="production-queue" id="production-queue-list">
+              <div class="placeholder">Esperando nuevos diseños...</div>
+            </div>
+          </article>
+
+          <!-- Historial solo visible para el Operador -->
+          <article class="card history-card" data-mode-only="saas">
+            <div class="card-header">
+              <h2>Historial Reciente</h2>
+              <span class="badge neutral">Archivo</span>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Diseñador</th><th>Archivo</th><th>Estado</th></tr>
+                </thead>
+                <tbody id="uploads-list">
+                  <tr><td colspan="3" class="placeholder">Cargando historial...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- PASO 2: PANELIZACIÓN / NESTING -->
+      <section class="workflow-step" id="step-2">
+        <div class="grid-panel">
+          <article class="card nesting-card">
+            <div class="card-header">
+              <h2>Gestión de Material y Hoja</h2>
+              <span class="badge info">Nesting</span>
+            </div>
+            <p class="card-description">Ubica el PCB en la lámina de material disponible para optimizar su uso.</p>
+            
+            <div class="nesting-controls" style="margin-bottom: 1.5rem;">
+                <label>
+                    <span>Margen de seguridad (mm)</span>
+                    <input type="number" id="nesting-margin" value="2.0" step="0.5" style="width: 80px;">
+                </label>
+                <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                    <button type="button" id="auto-nest-btn" class="btn">Colocar automáticamente</button>
+                    <button type="button" id="refresh-sheet-btn" class="btn secondary">Refrescar Lámina</button>
+                </div>
+            </div>
+
+            <div id="nesting-feedback" class="feedback"></div>
+
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                <button type="button" class="btn secondary" data-step-prev>Volver</button>
+                <button type="button" id="continue-to-cam-btn" class="btn" disabled>Continuar a CAM</button>
+            </div>
+          </article>
+
+          <article class="card visualization-card">
+            <div class="card-header">
+              <h2>Vista Previa de la Lámina</h2>
+              <span class="badge neutral">300x200 mm</span>
+            </div>
+            <div id="sheet-preview-container" class="sheet-preview-container" style="background: #0f172a; border-radius: 8px; padding: 10px; min-height: 300px; display: flex; align-items: center; justify-content: center;">
+                <img id="sheet-preview-img" src="/api/sheet/preview" alt="Vista previa de lámina" style="max-width: 100%; height: auto; border: 1px solid #334155;">
+            </div>
+            <div class="viewer-hint" style="margin-top: 1rem;">
+                Las áreas verdes están libres, las naranjas están ocupadas.
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- PASO 3: CAM / PREPARACIÓN -->
+      <section class="workflow-step" id="step-3">
+        <div class="grid-panel">
+          <article class="card config-card">
+            <div class="card-header">
+              <h2>Parámetros de Fabricación</h2>
+              <div class="config-tabs">
+                <button type="button" class="tab-btn active" data-config-tab="traces">Trazas</button>
+                <button type="button" class="tab-btn" data-config-tab="outline">Contorno</button>
+                <button type="button" class="tab-btn" data-config-tab="pads">Pads</button>
+              </div>
+            </div>
+            
+            <form id="config-form" class="config-form">
+              <!-- Sección Trazas -->
+              <div class="config-tab-content active" id="tab-traces">
+                <div class="config-grid-layout">
+                  <label><span>Profundidad (mm)</span><input name="t_depth" type="number" step="0.01" value="-0.06"></label>
+                  <label><span>Avance (mm/min)</span><input name="t_feedRate" type="number" value="120"></label>
+                  <label><span>Herramienta (mm)</span><input name="t_toolDiameter" type="number" step="0.05" value="0.1"></label>
+                  <label><span>Ancho Aisl. (mm)</span><input name="t_isolationWidth" type="number" step="0.05" value="0.25"></label>
+                  <label><span>Pasos Aisl.</span><input name="t_isolationSteps" type="number" value="2"></label>
+                  <label><span>Vel. Motor (RPM)</span><input name="t_millSpeed" type="number" value="10000"></label>
+                </div>
+              </div>
+
+              <!-- Sección Contorno -->
+              <div class="config-tab-content" id="tab-outline">
+                <div class="config-grid-layout">
+                  <label><span>Profundidad (mm)</span><input name="o_depth" type="number" step="0.01" value="-1.6"></label>
+                  <label><span>Avance (mm/min)</span><input name="o_feedRate" type="number" value="80"></label>
+                  <label><span>Herramienta (mm)</span><input name="o_toolDiameter" type="number" step="0.05" value="0.8"></label>
+                  <label><span>Vel. Motor (RPM)</span><input name="o_millSpeed" type="number" value="10000"></label>
+                  <label><span>Pasada Máx (mm)</span><input name="o_infeed" type="number" step="0.1" value="1.6"></label>
+                </div>
+              </div>
+
+              <!-- Sección Pads -->
+              <div class="config-tab-content" id="tab-pads">
+                <div class="config-grid-layout">
+                  <label><span>Profundidad (mm)</span><input name="p_depth" type="number" step="0.01" value="-0.06"></label>
+                  <label><span>Avance (mm/min)</span><input name="p_feedRate" type="number" value="120"></label>
+                  <label><span>Herramienta (mm)</span><input name="p_toolDiameter" type="number" step="0.05" value="0.1"></label>
+                  <label><span>Vel. Motor (RPM)</span><input name="p_millSpeed" type="number" value="10000"></label>
+                </div>
+              </div>
+
+              <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                <button type="button" class="btn secondary" data-step-prev>Volver</button>
+                <button type="submit" class="btn">Generar Código G</button>
+              </div>
+            </form>
+          </article>
+
+          <article class="card visualization-card">
+            <div class="card-header">
+              <h2>Especificaciones Técnicas</h2>
+              <span class="badge info">Specs</span>
+            </div>
+            <div class="info-grid" id="upload-metadata">
+                <div class="placeholder">Sube un archivo para ver detalles...</div>
+            </div>
+            <div data-mode-only="printshop" class="price-container">
+              <span class="hero-label">Costo Estimado</span>
+              <div id="printshop-price" class="price-tag">Bs 0.00</div>
+            </div>
+            <div data-mode-only="printshop" class="analysis-actions" style="margin-top: 1rem;">
+              <p class="viewer-hint" style="margin-bottom: 0.75rem;">Si el precio te convence, continúa a la simulación.</p>
+              <button type="button" id="continue-to-sim-btn" class="btn" style="width: 100%;">Seguir a simulación</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- PASO 4: SIMULACIÓN / VERIFICACIÓN -->
+      <section class="workflow-step" id="step-4">
+        <article class="card viewer-card">
+          <div class="card-header">
+            <h2>Simulación y Verificación 3D</h2>
+            <div class="header-actions">
+              <span id="viewer-status" class="badge neutral">Visores listos</span>
+              <button id="refreshFilesButton" class="btn secondary" style="margin:0; padding: 0.3rem 0.6rem; font-size: 0.7rem;">Actualizar</button>
+            </div>
+          </div>
+
+          <div class="triple-viewer-grid">
+            <div class="viewer-instance" id="viewer-traces" data-layer-type="traces">
+              <div class="viewer-header">
+                <h3>Trazas (gb1)</h3>
+                <div class="viewer-actions">
+                  <button class="viewer-ctrl-btn play-btn" title="Reproducir Simulación">▶</button>
+                  <button class="viewer-ctrl-btn stop-btn" title="Detener">⏹</button>
+                  <button class="viewer-ctrl-btn config-btn" title="Configuración de Capa">⚙</button>
+                </div>
+              </div>
+              <div class="canvas-wrapper">
+                <canvas id="canvas-traces"></canvas>
+              </div>
+              <div class="viewer-footer">
+                <input type="range" class="viewer-progress" min="0" max="100" value="0">
+              </div>
+            </div>
+
+            <div class="viewer-instance" id="viewer-outline" data-layer-type="outline">
+              <div class="viewer-header">
+                <h3>Contorno (gb0)</h3>
+                <div class="viewer-actions">
+                  <button class="viewer-ctrl-btn play-btn" title="Reproducir Simulación">▶</button>
+                  <button class="viewer-ctrl-btn stop-btn" title="Detener">⏹</button>
+                  <button class="viewer-ctrl-btn config-btn" title="Configuración de Capa">⚙</button>
+                </div>
+              </div>
+              <div class="canvas-wrapper">
+                <canvas id="canvas-outline"></canvas>
+              </div>
+              <div class="viewer-footer">
+                <input type="range" class="viewer-progress" min="0" max="100" value="0">
+              </div>
+            </div>
+
+            <div class="viewer-instance" id="viewer-pads" data-layer-type="pads">
+              <div class="viewer-header">
+                <h3>Pads (gb2)</h3>
+                <div class="viewer-actions">
+                  <button class="viewer-ctrl-btn play-btn" title="Reproducir Simulación">▶</button>
+                  <button class="viewer-ctrl-btn stop-btn" title="Detener">⏹</button>
+                  <button class="viewer-ctrl-btn config-btn" title="Configuración de Capa">⚙</button>
+                </div>
+              </div>
+              <div class="canvas-wrapper">
+                <canvas id="canvas-pads"></canvas>
+              </div>
+              <div class="viewer-footer">
+                <input type="range" class="viewer-progress" min="0" max="100" value="0">
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal de Configuración Independiente -->
+          <div id="layer-config-modal" class="modal">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 id="modal-layer-title">Configuración de Capa</h2>
+                <button class="close-modal">&times;</button>
+              </div>
+              <form id="layer-config-form">
+                <input type="hidden" name="layerType">
+                <div class="config-grid-layout">
+                  <label>
+                    <span>Profundidad (mm)</span>
+                    <input name="depth" type="number" step="0.01">
+                  </label>
+                  <label>
+                    <span>Avance (mm/min)</span>
+                    <input name="feedRate" type="number" step="5">
+                  </label>
+                  <label>
+                    <span>Herramienta (mm)</span>
+                    <input name="toolDiameter" type="number" step="0.05">
+                  </label>
+                  <label id="isolation-width-label">
+                    <span>Ancho Aisl. (mm)</span>
+                    <input name="isolationWidth" type="number" step="0.05">
+                  </label>
+                  <label id="isolation-steps-label">
+                    <span>Pasos Aisl.</span>
+                    <input name="isolationSteps" type="number" step="1">
+                  </label>
+                  <label>
+                    <span>Vel. Motor (RPM)</span>
+                    <input name="millSpeed" type="number" step="100">
+                  </label>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn">Guardar y Reprocesar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="step-actions" style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 1rem;">
+            <button type="button" class="btn secondary" data-step-prev>Ajustar CAM</button>
+            <button id="confirm-send-btn" class="btn" style="padding: 1.2rem 3rem;" disabled>APROBAR Y FABRICAR</button>
+          </div>
+          <p id="confirm-feedback" class="viewer-hint" style="text-align: center;">Verifica las trayectorias antes de continuar.</p>
+        </article>
+      </section>
+
+      <!-- PASO 5: EJECUCIÓN CNC -->
+      <section class="workflow-step" id="step-5">
+        <div class="grid-panel">
+          <article class="card execution-card">
+            <div class="card-header">
+              <h2>Control de Máquina</h2>
+              <span id="nav-serial-status-exec" class="badge status" data-mode-only-list="saas,education">Desconectada</span>
+            </div>
+            
+            <div data-mode-only="printshop" class="execution-summary-panel">
+                <div class="info-grid" style="margin-bottom: 1rem;">
+                    <div>
+                        <strong>Llave</strong>
+                        <span id="job-verification-key">--</span>
+                    </div>
+                    <div>
+                        <strong>Estado</strong>
+                        <span id="job-monitor-status">--</span>
+                    </div>
+                    <div>
+                        <strong>Hora</strong>
+                        <span id="job-completed-at">Pendiente</span>
+                    </div>
+                </div>
+                <p id="job-monitor-note" class="viewer-hint">Aún no se publica al operador.</p>
+            </div>
+
+            <div id="execution-layers-list" class="execution-layers-list" data-mode-only-list="saas,education">
+                <!-- Se llenará con las capas del trabajo actual -->
+                <p class="placeholder">Selecciona un trabajo procesado para ver las capas.</p>
+            </div>
+
+            <div class="execution-display" style="margin-top: 2rem;" data-mode-only-list="saas,education">
+                <div id="active-layer-info" style="margin-bottom: 0.5rem; font-weight: 600; color: var(--accent);">Esperando inicio...</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="cnc-progress-bar" style="width: 0%"></div>
+                    <span class="progress-text">0% completado</span>
+                </div>
+                
+                <div class="telemetry-grid">
+                    <div class="telemetry-item">
+                        <span class="label">X</span>
+                        <span id="pos-x" class="value">0.00</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="label">Y</span>
+                        <span id="pos-y" class="value">0.00</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="label">Z</span>
+                        <span id="pos-z" class="value">0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-actions" data-mode-only-list="saas,education">
+                <button id="emergency-stop-btn" class="btn status" style="background: #ef4444; width: 100%; font-size: 1.5rem; margin-top: 2rem;">PARADA DE EMERGENCIA</button>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button id="reset-cnc-btn" class="btn secondary" style="flex: 1;">Reset CNC</button>
+                    <button class="btn secondary" style="flex: 1;" onclick="window.location.reload()">Nuevo Trabajo</button>
+                </div>
+            </div>
+          </article>
+
+          <article class="card status-card" data-mode-only-list="saas,education">
+            <div class="card-header">
+              <h2>Logs en Tiempo Real</h2>
+              <span class="badge neutral">Consola</span>
+            </div>
+            <div class="console-box" id="cnc-console">
+                <div class="log-entry">Esperando inicio de fabricación...</div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+  </footer>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script src="{% static 'core/script-v2.js' %}" type="module"></script>
+</body>
+</html>
