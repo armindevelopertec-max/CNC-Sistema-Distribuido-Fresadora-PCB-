@@ -333,3 +333,12 @@ CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/
 
 --- 2026-05-04 15:06:02.766461+00:00 Layer: outline ---
 CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_qNJBBFm.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_138.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --isolation-width 0 --extra-passes 0
+
+--- 2026-05-04 15:35:30.845333+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_139.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 15:35:31.014324+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_139.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0 --milling-overlap 0.5
+
+--- 2026-05-04 15:35:31.088721+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_139.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --isolation-width 0 --extra-passes 0

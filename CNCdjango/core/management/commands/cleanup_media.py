@@ -71,8 +71,8 @@ class Command(BaseCommand):
         self.stdout.write('Cleaning orphaned files...')
         media_root = settings.MEDIA_ROOT
         
-        # Only delete orphans older than 2 hours to avoid race conditions with uploads
-        cutoff_time = time.time() - (2 * 3600)
+        # Only delete orphans older than 5 minutes to avoid race conditions with uploads
+        cutoff_time = time.time() - (5 * 60)
         
         subdirs = ['gerber_files', 'gcode_output', 'previews', 'temp']
         
