@@ -1,0 +1,335 @@
+
+--- 2026-05-04 14:05:21.973122+00:00 ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_iPfE67h.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_124.ngc --mill-speed 10000 --zwork -0.06 --cutter-diameter 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_CDHol4Y.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_124.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --drill /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_Z3fdIxC.gb2 --drill-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_124.ngc --drill-speed 10000 --zdrill -0.06 --drill-feed 120
+ERROR: Error: You've supplied an invalid parameter.
+Details: option '--cutter-diameter' cannot be specified more than once
+
+STDOUT: 
+
+--- 2026-05-04 14:05:32.984048+00:00 ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_oi64eQA.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_125.ngc --mill-speed 10000 --zwork -0.06 --cutter-diameter 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_kOBaw4P.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_125.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --drill /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_eMPYATf.gb2 --drill-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_125.ngc --drill-speed 10000 --zdrill -0.06 --drill-feed 120
+ERROR: Error: You've supplied an invalid parameter.
+Details: option '--cutter-diameter' cannot be specified more than once
+
+STDOUT: 
+
+--- 2026-05-04 14:06:17.599170+00:00 ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_XYbMePH.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_126.ngc --mill-speed 10000 --zwork -0.06 --front-cutter-diameter 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_aQXNFNZ.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_126.ngc --zcut -1.6 --outline-cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --drill /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_PkT7rqM.gb2 --drill-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_126.ngc --drill-speed 10000 --zdrill -0.06 --drill-feed 120
+ERROR: Error: You've supplied an invalid parameter.
+Details: unrecognised option '--front-cutter-diameter'
+
+STDOUT: 
+
+--- 2026-05-04 14:06:29.434027+00:00 ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_sXCCcBO.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_127.ngc --mill-speed 10000 --zwork -0.06 --front-cutter-diameter 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_qssv1y0.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_127.ngc --zcut -1.6 --outline-cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --drill /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_jl883zc.gb2 --drill-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_127.ngc --drill-speed 10000 --zdrill -0.06 --drill-feed 120
+ERROR: Error: You've supplied an invalid parameter.
+Details: unrecognised option '--front-cutter-diameter'
+
+STDOUT: 
+
+--- 2026-05-04 14:07:40.746313+00:00 ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_cfkgK8V.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_128.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_zlVs190.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_128.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --drill /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_5ZtugHC.gb2 --drill-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_128.ngc --drill-speed 10000 --zdrill -0.06 --drill-feed 120
+ERROR: Command '['pcb2gcode', '--metric', '--zsafe', '5', '--zchange', '5', '--front', '/home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_cfkgK8V.gb1', '--front-output', '/home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_128.ngc', '--mill-speed', '10000', '--zwork', '-0.06', '--mill-diameters', '0.1', '--mill-feed', '120', '--mill-vertfeed', '40', '--isolation-width', '0.25', '--extra-passes', '2', '--milling-overlap', '0.5', '--outline', '/home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_zlVs190.gb0', '--outline-output', '/home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_128.ngc', '--zcut', '-1.6', '--cutter-diameter', '0.8', '--cut-feed', '80', '--cut-vertfeed', '30', '--cut-speed', '10000', '--cut-infeed', '1.6', '--drill', '/home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_5ZtugHC.gb2', '--drill-output', '/home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_128.ngc', '--drill-speed', '10000', '--zdrill', '-0.06', '--drill-feed', '120']' died with <Signals.SIGSEGV: 11>.
+STDOUT: Importing front side... DONE.
+Importing back side... not specified.
+Importing outline... DONE.
+Processing input files... 
+Rendering front...
+Rendering outline...
+Layer outline rendered.
+Layer front rendered.
+DONE.
+Importing drill... 
+
+--- 2026-05-04 14:09:27.980043+00:00 ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_ftESFwZ.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_129.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_EDtn3WJ.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_129.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --drill /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_wcZ1TyJ.gb2 --drill-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_129.ngc --drill-speed 10000 --zdrill -0.06 --drill-feed 120
+ERROR: Command '['pcb2gcode', '--metric', '--zsafe', '5', '--zchange', '5', '--front', '/home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_ftESFwZ.gb1', '--front-output', '/home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_129.ngc', '--mill-speed', '10000', '--zwork', '-0.06', '--mill-diameters', '0.1', '--mill-feed', '120', '--mill-vertfeed', '40', '--isolation-width', '0.25', '--extra-passes', '2', '--milling-overlap', '0.5', '--outline', '/home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_EDtn3WJ.gb0', '--outline-output', '/home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_129.ngc', '--zcut', '-1.6', '--cutter-diameter', '0.8', '--cut-feed', '80', '--cut-vertfeed', '30', '--cut-speed', '10000', '--cut-infeed', '1.6', '--drill', '/home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_wcZ1TyJ.gb2', '--drill-output', '/home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_129.ngc', '--drill-speed', '10000', '--zdrill', '-0.06', '--drill-feed', '120']' died with <Signals.SIGSEGV: 11>.
+STDOUT: Importing front side... DONE.
+Importing back side... not specified.
+Importing outline... DONE.
+Processing input files... 
+Rendering front...
+Rendering outline...
+Layer outline rendered.
+Layer front rendered.
+DONE.
+Importing drill... 
+
+--- 2026-05-04 14:17:45.532594+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_BE8Ah7M.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_130.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:17:45.668984+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_L0AxHSY.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_130.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:17:45.770738+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_OT0ao6d.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_130.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:26:56.925777+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_AyugFsn.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_131.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:26:57.098308+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_Pz5ymvs.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_131.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:26:57.173658+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_fHViM1t.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_131.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:31:18.334126+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_znrFiXa.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_132.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:31:18.464442+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_9JGqjek.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_132.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:31:18.541821+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_nk5Sr6D.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_132.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:31:42.342207+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_83ja0HF.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_133.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:31:42.511155+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --drill /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST.drl --drill-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_133.ngc --drill-speed 10000 --zdrill -0.06 --drill-feed 120
+
+--- 2026-05-04 14:31:42.520612+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_Nm7sK1L.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_133.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:33:56.762713+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_ru3jHJi.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:33:56.922242+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_4ewxBsf.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:33:56.999334+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_0xWkD8m.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_134.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:34:02.953474+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_ru3jHJi.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 3 --milling-overlap 0.5
+
+--- 2026-05-04 14:34:03.164035+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_4ewxBsf.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:34:03.239028+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_0xWkD8m.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_134.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:34:14.847020+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_ru3jHJi.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 4 --milling-overlap 0.5
+
+--- 2026-05-04 14:34:15.020036+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_ru3jHJi.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 4 --milling-overlap 0.5
+
+--- 2026-05-04 14:34:15.123706+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_4ewxBsf.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:34:15.203305+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_0xWkD8m.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_134.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:34:15.272836+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_4ewxBsf.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:34:15.358497+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_0xWkD8m.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_134.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:35:22.998537+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_ru3jHJi.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.05 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 4 --milling-overlap 0.5
+
+--- 2026-05-04 14:35:23.255819+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_ru3jHJi.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.05 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 4 --milling-overlap 0.5
+
+--- 2026-05-04 14:35:23.274635+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_4ewxBsf.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:35:23.352847+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_0xWkD8m.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_134.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:35:23.525768+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_4ewxBsf.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:35:23.606719+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_0xWkD8m.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_134.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:36:06.393699+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_ru3jHJi.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.5 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 4 --milling-overlap 0.5
+
+--- 2026-05-04 14:36:06.539931+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_4ewxBsf.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:36:06.618462+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_0xWkD8m.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_134.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:36:28.734999+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_ru3jHJi.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.3 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 4 --milling-overlap 0.5
+
+--- 2026-05-04 14:36:28.989217+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_4ewxBsf.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_134.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:36:29.066132+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_0xWkD8m.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_134.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:40:53.360623+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_yWJLlME.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_135.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:40:53.525797+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_OIvVW4N.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_135.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:40:53.601954+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_Z0fpawe.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_135.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:42:13.893667+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_yWJLlME.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_135.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.5 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:42:14.052146+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_OIvVW4N.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_135.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:42:14.126966+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_Z0fpawe.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_135.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:44:05.048205+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_D3F2r22.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_136.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:44:05.218969+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_DKuFr5Q.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_136.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:44:05.296358+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_2Vrh1rB.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_136.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:45:58.811755+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_D3F2r22.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_136.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.5 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:45:58.959144+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_DKuFr5Q.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_136.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:45:59.037829+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_2Vrh1rB.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_136.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:46:10.591997+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_D3F2r22.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_136.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.7 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:46:10.974289+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_DKuFr5Q.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_136.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:46:11.050925+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_2Vrh1rB.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_136.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:46:33.880598+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_D3F2r22.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_136.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:46:34.419987+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_DKuFr5Q.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_136.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:46:34.497197+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_2Vrh1rB.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_136.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:49:03.825965+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_D3F2r22.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_136.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:49:03.999805+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_DKuFr5Q.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_136.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:49:04.138640+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_2Vrh1rB.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_136.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:51:12.245201+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_D3F2r22.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_136.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:51:12.780884+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_DKuFr5Q.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_136.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:51:12.920970+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_2Vrh1rB.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_136.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:56:27.768262+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_xXXxn53.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_137.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:56:28.068038+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_FBiEtrC.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_137.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:56:28.159052+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_RhluUsD.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_137.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 14:56:39.555014+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_xXXxn53.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_137.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 14:56:40.402776+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_FBiEtrC.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_137.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0
+
+--- 2026-05-04 14:56:40.584212+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_RhluUsD.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_137.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6
+
+--- 2026-05-04 15:03:41.017493+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_iazSHXG.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 15:03:41.178834+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_pP0bNBO.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.1 --extra-passes 0 --milling-overlap 0.5
+
+--- 2026-05-04 15:03:41.252351+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_qNJBBFm.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_138.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --isolation-width 0 --extra-passes 0
+
+--- 2026-05-04 15:03:55.852313+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_iazSHXG.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.25 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 15:03:55.995966+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_pP0bNBO.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 0 --milling-overlap 0.5
+
+--- 2026-05-04 15:03:56.145197+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_qNJBBFm.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_138.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --isolation-width 0 --extra-passes 0
+
+--- 2026-05-04 15:04:12.498583+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_iazSHXG.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 15:04:13.077728+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_pP0bNBO.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 0 --milling-overlap 0.5
+
+--- 2026-05-04 15:04:13.229135+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_qNJBBFm.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_138.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --isolation-width 0 --extra-passes 0
+
+--- 2026-05-04 15:04:20.325171+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_iazSHXG.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 15:04:20.927998+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_pP0bNBO.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 1 --milling-overlap 0.5
+
+--- 2026-05-04 15:04:21.276609+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_qNJBBFm.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_138.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --isolation-width 0 --extra-passes 0
+
+--- 2026-05-04 15:04:29.571455+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_iazSHXG.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 3 --milling-overlap 0.5
+
+--- 2026-05-04 15:04:30.477115+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_pP0bNBO.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 1 --milling-overlap 0.5
+
+--- 2026-05-04 15:04:30.838966+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_qNJBBFm.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_138.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --isolation-width 0 --extra-passes 0
+
+--- 2026-05-04 15:05:27.085697+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_iazSHXG.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 3 --milling-overlap 0.5
+
+--- 2026-05-04 15:05:27.990972+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_pP0bNBO.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.5 --extra-passes 1 --milling-overlap 0.5
+
+--- 2026-05-04 15:05:28.341718+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_qNJBBFm.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_138.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --isolation-width 0 --extra-passes 0
+
+--- 2026-05-04 15:05:41.000921+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_iazSHXG.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 3 --milling-overlap 0.5
+
+--- 2026-05-04 15:05:41.919094+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_pP0bNBO.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.25 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.5 --extra-passes 1 --milling-overlap 0.5
+
+--- 2026-05-04 15:05:42.040964+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_qNJBBFm.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_138.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --isolation-width 0 --extra-passes 0
+
+--- 2026-05-04 15:05:51.698538+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_iazSHXG.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 3 --milling-overlap 0.5
+
+--- 2026-05-04 15:05:52.642900+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_pP0bNBO.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.25 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.5 --extra-passes 2 --milling-overlap 0.5
+
+--- 2026-05-04 15:05:52.817884+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_qNJBBFm.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_138.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --isolation-width 0 --extra-passes 0
+
+--- 2026-05-04 15:06:01.674180+00:00 Layer: traces ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_iazSHXG.gb1 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/traces_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 1 --mill-feed 120 --mill-vertfeed 40 --isolation-width 1 --extra-passes 3 --milling-overlap 0.5
+
+--- 2026-05-04 15:06:02.600062+00:00 Layer: pads ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --front /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_pP0bNBO.gb2 --front-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/pads_138.ngc --mill-speed 10000 --zwork -0.06 --mill-diameters 0.25 --mill-feed 120 --mill-vertfeed 40 --isolation-width 0.5 --extra-passes 3 --milling-overlap 0.5
+
+--- 2026-05-04 15:06:02.766461+00:00 Layer: outline ---
+CMD: pcb2gcode --metric --zsafe 5 --zchange 5 --outline /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gerber_files/TEST_qNJBBFm.gb0 --outline-output /home/armintec/Documentos/CNC-FRESADOR-PCB/CNC-Sistema-Distribuido-Fresadora-PCB-/CNCdjango/media/gcode_output/outline_138.ngc --zcut -1.6 --cutter-diameter 0.8 --cut-feed 80 --cut-vertfeed 30 --cut-speed 10000 --cut-infeed 1.6 --isolation-width 0 --extra-passes 0

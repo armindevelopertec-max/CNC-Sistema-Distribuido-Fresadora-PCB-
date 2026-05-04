@@ -25,5 +25,8 @@ echo ""
 echo "🛠️  Tú como OPERADOR (Computadora 3) puedes usar:"
 echo "http://localhost:$PORT"
 echo "--------------------------------------------------------"
+echo "🧹 LIMPIANDO ARCHIVOS ANTIGUOS (Media Cleanup)"
+python3 manage.py cleanup_media --days 7 --orphans
+echo "--------------------------------------------------------"
 
 python3 manage.py runserver 0.0.0.0:$PORT

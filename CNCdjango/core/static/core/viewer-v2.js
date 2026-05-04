@@ -310,6 +310,8 @@ export function initViewer({ apiBase = '/api', clientId = null } = {}) {
           query.set('job_id', jobId);
         }
         if (layer.name) query.set('name', layer.name);
+        // Anti-cache parameter
+        query.set('_t', Date.now());
         const resp = await fetch(scopeUrl(`${apiBase}/viewer/gcode?${query.toString()}`));
         if (!resp.ok) throw new Error(`HTTP error! status: ${resp.status}`);
         const text = await resp.text();

@@ -125,44 +125,30 @@ const applyModeCopy = () => {
     const isPrintShop = currentMode === 'printshop';
     const stepItems = document.querySelectorAll('.workflow-nav .step-item');
     
-    let visibleIndex = 1;
     stepItems.forEach(item => {
-        const numSpan = item.querySelector('.step-number');
         const labelSpan = item.querySelector('.step-label');
 
-        // Visibilidad base
-        if (item.id === 'nav-step-nest' && isPrintShop) {
-            item.style.display = 'none';
+        if (isPrintShop) {
+            if (item.id === 'nav-step-cam' && labelSpan) labelSpan.textContent = 'Precio';
+            if (item.id === 'nav-step-sim' && labelSpan) labelSpan.textContent = 'Simulación';
+            if (item.id === 'nav-step-exec' && labelSpan) labelSpan.textContent = 'Estado';
         } else {
-            item.style.display = 'flex';
-        }
-
-        // Si es visible, numeramos y nombramos
-        if (item.style.display !== 'none') {
-            if (numSpan) numSpan.textContent = visibleIndex++;
-            
-            if (isPrintShop) {
-                if (item.id === 'nav-step-cam' && labelSpan) labelSpan.textContent = 'Precio';
-                if (item.id === 'nav-step-sim' && labelSpan) labelSpan.textContent = 'Simulación';
-                if (item.id === 'nav-step-exec' && labelSpan) labelSpan.textContent = 'Estado';
-            } else {
-                if (item.id === 'nav-step-cam' && labelSpan) labelSpan.textContent = 'CAM / Prep';
-                if (item.id === 'nav-step-sim' && labelSpan) labelSpan.textContent = 'Simulación';
-                if (item.id === 'nav-step-exec' && labelSpan) labelSpan.textContent = 'Ejecución';
-            }
+            if (item.id === 'nav-step-cam' && labelSpan) labelSpan.textContent = 'CAM / Prep';
+            if (item.id === 'nav-step-sim' && labelSpan) labelSpan.textContent = 'Simulación';
+            if (item.id === 'nav-step-exec' && labelSpan) labelSpan.textContent = 'Ejecución';
         }
     });
 
     if (isPrintShop) {
         // Títulos de tarjetas
-        const step3Title = document.querySelector('#step-3 .config-card .card-header h2');
-        if (step3Title) step3Title.textContent = 'Parámetros de Fabricación';
+        const step2Title = document.querySelector('#step-2 .config-card .card-header h2');
+        if (step2Title) step2Title.textContent = 'Parámetros de Fabricación';
         
         const configFormEl = document.getElementById('config-form');
         if (configFormEl) configFormEl.style.display = ''; // MOSTRAR form en PrintShop
 
-        const step5Title = document.querySelector('#step-5 .card-header h2');
-        if (step5Title) step5Title.textContent = 'Seguimiento del trabajo';
+        const step4Title = document.querySelector('#step-4 .card-header h2');
+        if (step4Title) step4Title.textContent = 'Seguimiento del trabajo';
 
         if (continueToSimBtn) continueToSimBtn.textContent = 'Seguir a simulación';
         if (confirmButton) confirmButton.textContent = 'CONFIRMAR Y ENVIAR AL OPERADOR';
@@ -311,8 +297,8 @@ if (dropZone) {
 // Per-layer configuration
 let layerConfigs = {
   traces: { depth: '-0.06', feedRate: '120', toolDiameter: '0.1', millSpeed: '10000', isolationWidth: '0.25', isolationSteps: '2' },
-  outline: { depth: '-1.6', feedRate: '80', toolDiameter: '0.8', millSpeed: '10000', isolationWidth: '0', isolationSteps: '0' },
-  pads: { depth: '-0.06', feedRate: '120', toolDiameter: '0.1', millSpeed: '10000', isolationWidth: '0', isolationSteps: '0' }
+  outline: { depth: '-1.6', feedRate: '80', toolDiameter: '0.8', millSpeed: '10000', isolationWidth: '0', isolationSteps: '0', infeed: '1.6' },
+  pads: { depth: '-0.06', feedRate: '120', toolDiameter: '0.1', millSpeed: '10000', isolationWidth: '0.1', isolationSteps: '0' }
 };
 
 let currentConfig = {
@@ -332,12 +318,6 @@ applyModeCopy();
 
 // Workflow Logic
 const setStep = (step) => {
-    // Si estamos en printshop y saltamos al paso 2 (nesting), ir directo al 3
-    if (currentMode === 'printshop' && step === 2) {
-        setStep(3);
-        return;
-    }
-
     currentStep = step;
     workflowSteps.forEach((el, idx) => {
         el.classList.toggle('active', idx + 1 === step);
@@ -347,7 +327,7 @@ const setStep = (step) => {
         el.classList.toggle('completed', idx + 1 < step);
     });
     // Force resize for 3D viewers if entering simulation step
-    if (step === 4) { // Ahora Simulación es el paso 4
+    if (step === 3) { // Ahora Simulación es el paso 3
         setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -355,9 +335,8 @@ const setStep = (step) => {
 
 const isStepValid = (step) => {
     if (step === 1) return !!currentJobId;
-    if (step === 2) return currentMode === 'printshop' || true; // Nesting siempre válido o ignorado
-    if (step === 3) return true; // CAM
-    if (step === 4) return !!activeViewerGcode; // Simulación
+    if (step === 2) return true; // CAM
+    if (step === 3) return !!activeViewerGcode; // Simulación
     return true;
 };
 
@@ -373,8 +352,6 @@ document.querySelectorAll('[data-step-target]').forEach(item => {
 document.querySelectorAll('[data-step-prev]').forEach(btn => {
     btn.addEventListener('click', () => {
         let prev = currentStep - 1;
-        if (currentMode === 'printshop' && prev === 2) prev = 1;
-        // Si estamos en el paso 3 y vamos atrás en printshop, ir al 1
         setStep(prev);
     });
 });
@@ -462,7 +439,7 @@ window.prepareJob = async (jobId) => {
             ensureViewerController().then((vc) => {
                 if (vc?.loadJobLayers) vc.loadJobLayers(data);
             });
-            setStep(3); // Ir a CAM (Análisis de Precio)
+            setStep(2); // Ir a CAM (Análisis de Precio)
         } else {
             // MODO SaaS / Education
             if (statusBadge) {
@@ -485,10 +462,9 @@ window.prepareJob = async (jobId) => {
                 alias: 'Anónimo'
             });
 
-            setStep(2); // Ir a Panelización
-            refreshSheetPreview();
+            setStep(2); // Ir directamente a CAM (Saltando Nesting)
             if (statusBadge) {
-                statusBadge.textContent = "Esperando ubicación";
+                statusBadge.textContent = "Listo para procesar";
                 statusBadge.className = "badge neutral";
             }
         }
@@ -813,22 +789,12 @@ const openLayerConfig = (type) => {
     layerForm.elements['feedRate'].value = config.feedRate || '';
     layerForm.elements['toolDiameter'].value = config.toolDiameter || '';
     layerForm.elements['millSpeed'].value = config.millSpeed || '';
-    
-    const isoWidth = document.getElementById('isolation-width-label');
-    const isoSteps = document.getElementById('isolation-steps-label');
-    
-    if (type === 'traces') {
-        if (isoWidth) isoWidth.style.display = 'block';
-        if (isoSteps) isoSteps.style.display = 'block';
-        layerForm.elements['isolationWidth'].value = config.isolationWidth || '0.25';
-        layerForm.elements['isolationSteps'].value = config.isolationSteps || '2';
-    } else {
-        if (isoWidth) isoWidth.style.display = 'none';
-        if (isoSteps) isoSteps.style.display = 'none';
-    }
-    
+    layerForm.elements['isolationWidth'].value = config.isolationWidth || '0';
+    layerForm.elements['isolationSteps'].value = config.isolationSteps || '0';
+
     console.log("Mostrando modal...");
     layerModal.style.display = 'block';
+
     layerModal.classList.add('is-open'); // Asegurar visibilidad con clase si existe
 };
 
@@ -854,20 +820,25 @@ if (layerForm) {
         const data = new FormData(layerForm);
         const type = data.get('layerType');
         
+        const submitBtn = layerForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn ? submitBtn.textContent : 'Guardar';
+        
         const updatedConfig = {
+            ...layerConfigs[type], // Mantener campos existentes no presentes en el modal
             depth: data.get('depth'),
             feedRate: data.get('feedRate'),
             toolDiameter: data.get('toolDiameter'),
             millSpeed: data.get('millSpeed'),
-            isolationWidth: data.get('isolationWidth') || '0',
-            isolationSteps: data.get('isolationSteps') || '0'
+            isolationWidth: data.get('isolationWidth') || layerConfigs[type].isolationWidth || '0',
+            isolationSteps: data.get('isolationSteps') || layerConfigs[type].isolationSteps || '0'
         };
 
-        layerConfigs[type] = updatedConfig;
-        layerModal.style.display = 'none';
-        layerModal.classList.remove('is-open');
-        
         if (currentJobId) {
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Procesando...';
+            }
+
             const statusBadge = document.getElementById('viewer-status');
             if (statusBadge) {
                 statusBadge.textContent = `Reprocesando ${type}...`;
@@ -875,24 +846,47 @@ if (layerForm) {
             }
             
             try {
-                const response = await fetch(`${API_BASE}/reprocess`, {
+                const response = await fetch(withClientScope(`${API_BASE}/reprocess/`), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
+                    body: JSON.stringify(withClientJson({ 
                         jobId: currentJobId, 
                         layerType: type, 
                         config: updatedConfig 
-                    })
+                    }))
                 });
+                
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.error || 'Error en el servidor');
+                }
+
                 const result = await response.json();
+                
+                // Actualizar configuración local solo tras éxito
+                layerConfigs[type] = updatedConfig;
+                
+                // Cerrar modal
+                layerModal.style.display = 'none';
+                layerModal.classList.remove('is-open');
+
                 if (result.layers) {
+                    // Actualizar el G-code combinado si el servidor lo envió
+                    if (result.combined_gcode) {
+                        setActiveViewerGcode(result.combined_gcode);
+                    }
+                    
                     updateExecutionList(result);
+                    
                     const vc = await ensureViewerController();
                     if (vc?.loadJobLayers) {
+                        // Forzamos al controlador a limpiar y recargar
+                        console.log("Recargando capas en el visor...");
                         await vc.loadJobLayers(result);
                     }
+                    
                     if (statusBadge) {
-                        statusBadge.textContent = 'Capa actualizada';
+                        statusBadge.textContent = '¡Capa Actualizada!';
                         statusBadge.className = 'badge info';
                         setTimeout(() => {
                             statusBadge.textContent = 'Visores listos';
@@ -902,11 +896,21 @@ if (layerForm) {
                 }
             } catch (err) {
                 console.error("Error reprocesando", err);
+                alert(`Error al reprocesar: ${err.message}`);
                 if (statusBadge) {
                     statusBadge.textContent = 'Error al procesar';
                     statusBadge.className = 'badge status';
                 }
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                }
             }
+        } else {
+            alert("No hay un trabajo activo para reprocesar.");
+            layerModal.style.display = 'none';
+            layerModal.classList.remove('is-open');
         }
     };
 }
@@ -1040,20 +1044,24 @@ if (configForm && isPanel) {
           feedRate: data.get('o_feedRate'),
           toolDiameter: data.get('o_toolDiameter'),
           millSpeed: data.get('o_millSpeed'),
+          isolationWidth: data.get('o_isolationWidth'),
+          isolationSteps: data.get('o_isolationSteps'),
           infeed: data.get('o_infeed')
       },
       pads: {
           depth: data.get('p_depth'),
           feedRate: data.get('p_feedRate'),
           toolDiameter: data.get('p_toolDiameter'),
-          millSpeed: data.get('p_millSpeed')
+          millSpeed: data.get('p_millSpeed'),
+          isolationWidth: data.get('p_isolationWidth'),
+          isolationSteps: data.get('p_isolationSteps')
       }
     };
 
     if (currentJobId) {
         uploadFeedback.textContent = 'Reprocesando todas las capas...';
         try {
-            const response = await fetch(`${API_BASE}/reprocess`, {
+            const response = await fetch(withClientScope(`${API_BASE}/reprocess/`), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(withClientJson({ jobId: currentJobId, config: layerConfigs }))
@@ -1071,13 +1079,13 @@ if (configForm && isPanel) {
         }
     }
 
-    setStep(4);
+    setStep(3);
   });
 }
 
 if (continueToSimBtn) {
   continueToSimBtn.addEventListener('click', () => {
-    setStep(4);
+    setStep(3);
   });
 }
 

@@ -33,13 +33,16 @@ def nest_pcb(request, job_id):
 
 def sheet_visual_preview(request, sheet_id=None):
     """Genera un SVG dinámico de la lámina."""
-    if not sheet_id:
+    if not sheet_id or sheet_id == 'undefined':
         sheet = Sheet.objects.filter(is_active=True).first()
     else:
-        sheet = Sheet.objects.filter(id=sheet_id).first()
+        try:
+            sheet = Sheet.objects.filter(id=sheet_id).first()
+        except Exception:
+            sheet = Sheet.objects.filter(is_active=True).first()
         
     if not sheet:
-        return HttpResponse('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200"><text x="10" y="20">No hay lámina activa</text></svg>', content_type="image/svg+xml")
+        return HttpResponse('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200"><rect width="100%" height="100%" fill="#1e293b" /><text x="10" y="20" fill="white">No hay lámina activa</text></svg>', content_type="image/svg+xml")
 
     # Crear SVG
     width = sheet.width
@@ -254,24 +257,35 @@ def reprocess_layer(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body or '{}')
-            job_id = data.get('jobId')
+            # Intentar obtener job_id de varias fuentes
+            job_id = data.get('jobId') or data.get('job_id') or request.GET.get('job_id')
             layer_type = data.get('layerType')
             new_config = data.get('config')
             client_id = get_client_scope(request, data)
 
-            job_queryset = PCBJob.objects.all() if client_id else PCBJob.objects.filter(published_to_operator=True)
+            # Búsqueda más flexible del trabajo
             if client_id:
-                job_queryset = job_queryset.filter(client_id=client_id)
-            job = job_queryset.filter(id=job_id).first()
+                job = PCBJob.objects.filter(id=job_id, client_id=client_id).first()
+            else:
+                # Si no hay client_id, solo permitir si está publicado al operador
+                job = PCBJob.objects.filter(id=job_id, published_to_operator=True).first()
+
             if not job:
-                message = 'Trabajo no encontrado para esta estación.' if client_id else 'Trabajo no encontrado.'
-                return JsonResponse({'error': message}, status=404)
+                # Si aún no se encuentra, intentar buscar sin client_id solo si es Admin (DEBUG/Local)
+                if not client_id and settings.DEBUG:
+                     job = PCBJob.objects.filter(id=job_id).first()
+                
+                if not job:
+                    message = f"Trabajo {job_id} no encontrado para la estación '{client_id}'." if client_id else f"Trabajo {job_id} no encontrado o no autorizado."
+                    return JsonResponse({'error': message}, status=404)
 
             if layer_type:
-                # Actualizar solo la config de esa capa
+                # Actualizar solo la config de esa capa preservando el resto
+                if not isinstance(job.config, dict):
+                    job.config = {}
                 job.config[layer_type] = new_config
             else:
-                # Actualizar toda la configuración (usado en Paso 2)
+                # Actualizar toda la configuración
                 job.config = new_config
 
             job.save()
@@ -314,6 +328,13 @@ def get_status(request):
     
     recent_upload = None
     if recent:
+        size = 0
+        try:
+            if recent.traces_file and os.path.exists(recent.traces_file.path):
+                size = recent.traces_file.size
+        except Exception:
+            pass
+
         recent_upload = {
             'clientId': recent.client_id or None,
             'clientLabel': recent.client_label or None,
@@ -323,7 +344,7 @@ def get_status(request):
             'stage': recent.get_status_display(),
             'uploadedAt': recent.created_at.isoformat(),
             'completedAt': recent.completed_at.isoformat() if recent.completed_at else None,
-            'size': recent.traces_file.size if recent.traces_file else 0,
+            'size': size,
             'dimensions': {'widthMm': recent.width_mm, 'heightMm': recent.height_mm},
             'area_mm2': recent.area_mm2,
             'price_bs': recent.price_bs,
@@ -341,21 +362,30 @@ def list_uploads(request):
     """Compatible con /api/uploads"""
     jobs, _ = visible_jobs(request)
     jobs = jobs.order_by('-created_at')[:12]
-    data = [{
-        'id': j.id,
-        'alias': j.alias or 'Anónimo',
-        'filename': j.original_name,
-        'size': j.traces_file.size if j.traces_file else 0,
-        'uploadedAt': j.created_at.isoformat(),
-        'completedAt': j.completed_at.isoformat() if j.completed_at else None,
-        'status': j.status,
-        'stage': j.get_status_display(),
-        'price': j.price_bs,
-        'verificationKey': j.verification_key,
-        'clientId': j.client_id or None,
-        'clientLabel': j.client_label or None,
-        'publishedToOperator': j.published_to_operator,
-    } for j in jobs]
+    data = []
+    for j in jobs:
+        size = 0
+        try:
+            if j.traces_file and os.path.exists(j.traces_file.path):
+                size = j.traces_file.size
+        except Exception:
+            pass
+            
+        data.append({
+            'id': j.id,
+            'alias': j.alias or 'Anónimo',
+            'filename': j.original_name,
+            'size': size,
+            'uploadedAt': j.created_at.isoformat(),
+            'completedAt': j.completed_at.isoformat() if j.completed_at else None,
+            'status': j.status,
+            'stage': j.get_status_display(),
+            'price': j.price_bs,
+            'verificationKey': j.verification_key,
+            'clientId': j.client_id or None,
+            'clientLabel': j.client_label or None,
+            'publishedToOperator': j.published_to_operator,
+        })
     return JsonResponse(data, safe=False)
 
 def get_ports(request):
@@ -446,6 +476,29 @@ def publish_job(request, job_id):
             return JsonResponse({'error': str(e)}, status=500)
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
+@csrf_exempt
+def reset_placement(request, job_id):
+    """Elimina la información de nesting para que el G-code se genere en (0,0)"""
+    if request.method == 'POST':
+        try:
+            job = PCBJob.objects.get(id=job_id)
+            job.placement_x = 0.0
+            job.placement_y = 0.0
+            job.sheet = None
+            job.status = 'RECEIVED' # Volver a estado inicial
+            job.save()
+            
+            # Reprocesar automáticamente sin offsets
+            success, message = process_gerber_to_gcode(job.id)
+            
+            if success:
+                return JsonResponse({'status': 'ok', 'message': 'Posición reseteada a (0,0) y G-code regenerado.'})
+            else:
+                return JsonResponse({'error': message}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
 def list_viewer_files(request):
     """Lista trabajos procesados con sus capas disponibles"""
     jobs, _ = visible_jobs(request, PCBJob.objects.filter(status__in=['READY', 'SENDING', 'COMPLETED']))
@@ -454,15 +507,23 @@ def list_viewer_files(request):
     data = []
     for job in jobs:
         layers = []
-        if job.traces_gcode: layers.append({'type': 'traces', 'name': os.path.basename(job.traces_gcode.name)})
-        if job.outline_gcode: layers.append({'type': 'outline', 'name': os.path.basename(job.outline_gcode.name)})
-        if job.pads_gcode: layers.append({'type': 'pads', 'name': os.path.basename(job.pads_gcode.name)})
+        # Solo añadir capas si el archivo existe físicamente
+        if job.traces_gcode and os.path.exists(job.traces_gcode.path): 
+            layers.append({'type': 'traces', 'name': os.path.basename(job.traces_gcode.name)})
+        if job.outline_gcode and os.path.exists(job.outline_gcode.path): 
+            layers.append({'type': 'outline', 'name': os.path.basename(job.outline_gcode.name)})
+        if job.pads_gcode and os.path.exists(job.pads_gcode.path): 
+            layers.append({'type': 'pads', 'name': os.path.basename(job.pads_gcode.name)})
         
+        # Si no hay ninguna capa física, omitir este trabajo de la lista del visor
+        if not layers and not (job.gcode_file and os.path.exists(job.gcode_file.path)):
+            continue
+
         data.append({
             'id': job.id,
             'alias': job.alias or 'Anónimo',
             'name': job.original_name,
-            'combined_gcode': os.path.basename(job.gcode_file.name) if job.gcode_file else None,
+            'combined_gcode': os.path.basename(job.gcode_file.name) if job.gcode_file and os.path.exists(job.gcode_file.path) else None,
             'layers': layers,
             'clientId': job.client_id or None,
             'clientLabel': job.client_label or None,
@@ -485,16 +546,19 @@ def get_viewer_gcode(request):
     job = None
     if job_id:
         job = queryset.filter(id=job_id).first()
+    
+    # Intento de búsqueda por nombre de archivo si no hay ID
     if not job and name:
+        name_clean = os.path.basename(name)
         job = queryset.filter(
-            Q(gcode_file__icontains=name) |
-            Q(traces_gcode__icontains=name) |
-            Q(outline_gcode__icontains=name) |
-            Q(pads_gcode__icontains=name)
+            Q(gcode_file__icontains=name_clean) |
+            Q(traces_gcode__icontains=name_clean) |
+            Q(outline_gcode__icontains=name_clean) |
+            Q(pads_gcode__icontains=name_clean)
         ).first()
 
     if not job:
-        return HttpResponse('Archivo no encontrado', status=404)
+        return HttpResponse(f'Trabajo {job_id or name or ""} no encontrado', status=404)
 
     file_map = {
         'traces': job.traces_gcode,
@@ -514,13 +578,33 @@ def get_viewer_gcode(request):
                 break
 
     if not file_obj:
+        # Fallback al archivo combinado o cualquiera disponible
         file_obj = job.gcode_file or job.traces_gcode or job.outline_gcode or job.pads_gcode
 
-    if not file_obj or not file_obj.name or not os.path.exists(file_obj.path):
-        return HttpResponse('Archivo no encontrado', status=404)
+    if not file_obj or not file_obj.name:
+        return HttpResponse('El trabajo no tiene archivos G-code asociados', status=404)
     
-    with open(file_obj.path, 'r') as f:
-        return HttpResponse(f.read(), content_type='text/plain')
+    # Búsqueda física robusta
+    possible_paths = [
+        file_obj.path,
+        os.path.join(settings.MEDIA_ROOT, file_obj.name),
+        os.path.join(settings.MEDIA_ROOT, 'gcode_output', os.path.basename(file_obj.name))
+    ]
+    
+    final_path = None
+    for p in possible_paths:
+        if os.path.exists(p):
+            final_path = p
+            break
+            
+    if not final_path:
+        return HttpResponse(f'Archivo físico no encontrado en el servidor: {os.path.basename(file_obj.name)}', status=404)
+    
+    try:
+        with open(final_path, 'r') as f:
+            return HttpResponse(f.read(), content_type='text/plain')
+    except Exception as e:
+        return HttpResponse(f'Error al leer el archivo: {str(e)}', status=500)
 
 def stream_cnc_runtime(request):
     """Compatible con /api/runtime/stream"""

@@ -1,0 +1,55 @@
+REFERENCIA DE PARÁMETROS PCB2GCODE
+=================================
+
+Este documento detalla cómo el sistema configura los comandos de pcb2gcode para cada capa.
+Nota: Se utiliza la opción '--metric' globalmente.
+
+1. PARÁMETROS GLOBALES (Se aplican a todas las capas)
+--------------------------------------------------
+--metric            : Utiliza unidades milimétricas.
+--zsafe 5           : Altura de seguridad para desplazamientos (5mm).
+--zchange 5         : Altura para cambio de herramienta (5mm).
+--x-offset / --y-offset : Desplazamiento si se usa Nesting/Posicionamiento.
+
+2. CAPA DE PISTAS (TRACES)
+--------------------------
+--front [archivo]           : Archivo Gerber de pistas.
+--front-output [salida]     : Nombre del archivo G-code generado.
+--mill-speed [rpm]          : Velocidad del spindle.
+--zwork [profundidad]       : Profundidad de fresado (ej: -0.06mm).
+--mill-diameters [dia]      : Diámetro de la punta/fresa (ej: 0.1mm).
+--mill-feed [avance]        : Velocidad de avance horizontal.
+--mill-vertfeed 40          : Velocidad de bajada vertical (fija en 40).
+--isolation-width [ancho]   : Ancho total de aislamiento deseado.
+--extra-passes [n]          : Pasadas adicionales para limpiar cobre.
+--milling-overlap 0.5       : Solapamiento del 50% entre pasadas.
+
+3. CAPA DE PADS / AGUJEROS
+--------------------------
+Caso A: Si el archivo es EXCELLON (.drl, .gb2 con formato drill)
+--drill [archivo]           : Archivo de taladrado.
+--drill-output [salida]     : Nombre del archivo G-code generado.
+--drill-speed [rpm]         : Velocidad del spindle.
+--zdrill [profundidad]      : Profundidad de taladrado (ej: -0.6mm).
+--drill-feed [avance]       : Velocidad de bajada del taladro.
+
+Caso B: Si el archivo es GERBER (Tratado como fresado de pads)
+--front [archivo]           : Archivo Gerber de pads.
+--front-output [salida]     : Nombre del archivo G-code generado.
+--mill-speed [rpm]          : Velocidad del spindle.
+--zwork [profundidad]       : Profundidad de fresado.
+--mill-diameters [dia]      : Diámetro de la fresa.
+--mill-feed [avance]        : Velocidad de avance.
+--isolation-width 0.1       : Aislamiento mínimo (0.1mm).
+--extra-passes 0            : Sin pasadas extra.
+
+4. CAPA DE CORTE / BORDE (OUTLINE)
+----------------------------------
+--outline [archivo]         : Archivo Gerber del borde.
+--outline-output [salida]   : Nombre del archivo G-code generado.
+--zcut [profundidad]        : Profundidad total de corte (ej: -1.6mm).
+--cutter-diameter [dia]     : Diámetro de la fresa de corte (ej: 0.8mm).
+--cut-feed [avance]         : Velocidad de avance de corte.
+--cut-vertfeed 30           : Velocidad de bajada vertical (fija en 30).
+--cut-speed [rpm]           : Velocidad del spindle.
+--cut-infeed [profundidad]  : Máxima profundidad por pasada (igual a zcut para 1 sola pasada).

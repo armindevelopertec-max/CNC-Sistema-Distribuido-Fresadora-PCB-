@@ -1,6 +1,9 @@
+import os
 import uuid
 
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 
 def generate_verification_key():
@@ -78,10 +81,24 @@ class PCBJob(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        origin = self.client_label or self.client_id
-        suffix = f" [{origin}]" if origin else ""
-        return f"{self.original_name}{suffix} ({self.status})"
-
     class Meta:
         ordering = ['-created_at']
+
+@receiver(post_delete, sender=PCBJob)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes files from filesystem when corresponding PCBJob object is deleted.
+    """
+    file_fields = [
+        'traces_file', 'outline_file', 'pads_file',
+        'traces_gcode', 'outline_gcode', 'pads_gcode',
+        'gcode_file', 'preview_img'
+    ]
+    for field_name in file_fields:
+        field = getattr(instance, field_name)
+        if field:
+            try:
+                if os.path.isfile(field.path):
+                    os.remove(field.path)
+            except Exception:
+                pass

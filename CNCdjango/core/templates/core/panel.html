@@ -26,20 +26,16 @@
         <span class="step-number">1</span>
         <span class="step-label">Importar</span>
       </div>
-      <div class="step-item" data-step-target="2" id="nav-step-nest">
+      <div class="step-item" data-step-target="2" id="nav-step-cam">
         <span class="step-number">2</span>
-        <span class="step-label">Panelización</span>
-      </div>
-      <div class="step-item" data-step-target="3" id="nav-step-cam">
-        <span class="step-number">3</span>
         <span class="step-label">CAM / Prep</span>
       </div>
-      <div class="step-item" data-step-target="4" id="nav-step-sim">
-        <span class="step-number">4</span>
+      <div class="step-item" data-step-target="3" id="nav-step-sim">
+        <span class="step-number">3</span>
         <span class="step-label">Simulación</span>
       </div>
-      <div class="step-item" data-step-target="5" id="nav-step-exec">
-        <span class="step-number">5</span>
+      <div class="step-item" data-step-target="4" id="nav-step-exec">
+        <span class="step-number">4</span>
         <span class="step-label">Ejecución</span>
       </div>
     </nav>
@@ -109,52 +105,8 @@
         </div>
       </section>
 
-      <!-- PASO 2: PANELIZACIÓN / NESTING -->
+      <!-- PASO 2: CAM / PREPARACIÓN -->
       <section class="workflow-step" id="step-2">
-        <div class="grid-panel">
-          <article class="card nesting-card">
-            <div class="card-header">
-              <h2>Gestión de Material y Hoja</h2>
-              <span class="badge info">Nesting</span>
-            </div>
-            <p class="card-description">Ubica el PCB en la lámina de material disponible para optimizar su uso.</p>
-            
-            <div class="nesting-controls" style="margin-bottom: 1.5rem;">
-                <label>
-                    <span>Margen de seguridad (mm)</span>
-                    <input type="number" id="nesting-margin" value="2.0" step="0.5" style="width: 80px;">
-                </label>
-                <div style="margin-top: 1rem; display: flex; gap: 1rem;">
-                    <button type="button" id="auto-nest-btn" class="btn">Colocar automáticamente</button>
-                    <button type="button" id="refresh-sheet-btn" class="btn secondary">Refrescar Lámina</button>
-                </div>
-            </div>
-
-            <div id="nesting-feedback" class="feedback"></div>
-
-            <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-                <button type="button" class="btn secondary" data-step-prev>Volver</button>
-                <button type="button" id="continue-to-cam-btn" class="btn" disabled>Continuar a CAM</button>
-            </div>
-          </article>
-
-          <article class="card visualization-card">
-            <div class="card-header">
-              <h2>Vista Previa de la Lámina</h2>
-              <span class="badge neutral">300x200 mm</span>
-            </div>
-            <div id="sheet-preview-container" class="sheet-preview-container" style="background: #0f172a; border-radius: 8px; padding: 10px; min-height: 300px; display: flex; align-items: center; justify-content: center;">
-                <img id="sheet-preview-img" src="/api/sheet/preview" alt="Vista previa de lámina" style="max-width: 100%; height: auto; border: 1px solid #334155;">
-            </div>
-            <div class="viewer-hint" style="margin-top: 1rem;">
-                Las áreas verdes están libres, las naranjas están ocupadas.
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <!-- PASO 3: CAM / PREPARACIÓN -->
-      <section class="workflow-step" id="step-3">
         <div class="grid-panel">
           <article class="card config-card">
             <div class="card-header">
@@ -186,6 +138,8 @@
                   <label><span>Avance (mm/min)</span><input name="o_feedRate" type="number" value="80"></label>
                   <label><span>Herramienta (mm)</span><input name="o_toolDiameter" type="number" step="0.05" value="0.8"></label>
                   <label><span>Vel. Motor (RPM)</span><input name="o_millSpeed" type="number" value="10000"></label>
+                  <label><span>Ancho Aisl. (mm)</span><input name="o_isolationWidth" type="number" step="0.05" value="0"></label>
+                  <label><span>Pasos Aisl.</span><input name="o_isolationSteps" type="number" value="0"></label>
                   <label><span>Pasada Máx (mm)</span><input name="o_infeed" type="number" step="0.1" value="1.6"></label>
                 </div>
               </div>
@@ -197,6 +151,8 @@
                   <label><span>Avance (mm/min)</span><input name="p_feedRate" type="number" value="120"></label>
                   <label><span>Herramienta (mm)</span><input name="p_toolDiameter" type="number" step="0.05" value="0.1"></label>
                   <label><span>Vel. Motor (RPM)</span><input name="p_millSpeed" type="number" value="10000"></label>
+                  <label><span>Ancho Aisl. (mm)</span><input name="p_isolationWidth" type="number" step="0.05" value="0.1"></label>
+                  <label><span>Pasos Aisl.</span><input name="p_isolationSteps" type="number" value="0"></label>
                 </div>
               </div>
 
@@ -227,8 +183,8 @@
         </div>
       </section>
 
-      <!-- PASO 4: SIMULACIÓN / VERIFICACIÓN -->
-      <section class="workflow-step" id="step-4">
+      <!-- PASO 3: SIMULACIÓN / VERIFICACIÓN -->
+      <section class="workflow-step" id="step-3">
         <article class="card viewer-card">
           <div class="card-header">
             <h2>Simulación y Verificación 3D</h2>
@@ -341,8 +297,8 @@
         </article>
       </section>
 
-      <!-- PASO 5: EJECUCIÓN CNC -->
-      <section class="workflow-step" id="step-5">
+      <!-- PASO 4: EJECUCIÓN CNC -->
+      <section class="workflow-step" id="step-4">
         <div class="grid-panel">
           <article class="card execution-card">
             <div class="card-header">
