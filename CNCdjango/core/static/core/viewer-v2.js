@@ -125,10 +125,16 @@ class GCodeViewer {
         this.group = new THREE.Group();
         this.scene.add(this.group);
         
-        // Tool representation
-        this.tool = new THREE.Mesh(
-            new THREE.SphereGeometry(1, 16, 16),
-            new THREE.MeshBasicMaterial({ color: 0xffffff })
+        // Tool marker: tiny screen-space point instead of a 3D sphere.
+        const toolGeometry = new THREE.BufferGeometry();
+        toolGeometry.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0], 3));
+        this.tool = new THREE.Points(
+            toolGeometry,
+            new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 6,
+                sizeAttenuation: false,
+            })
         );
         this.tool.visible = false;
         this.scene.add(this.tool);

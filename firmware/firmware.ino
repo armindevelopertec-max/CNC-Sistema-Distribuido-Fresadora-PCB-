@@ -34,7 +34,7 @@ int penDelay = 50;
 
 float StepsPerMillimeterX = 100.0;
 float StepsPerMillimeterY = 100.0;
-. 
+
 float Xmin = 0;
 float Xmax = 40;
 float Ymin = 0;

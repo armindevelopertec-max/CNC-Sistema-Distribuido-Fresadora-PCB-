@@ -76,7 +76,7 @@ const ensureViewerController = async () => {
   if (viewerController) return viewerController;
 
   if (!viewerInitPromise) {
-    viewerInitPromise = import('./viewer-v2.js')
+    viewerInitPromise = import(`./viewer-v2.js?v=${encodeURIComponent(window.__VIEWER_VERSION__ || '20260504')}`)
       .then((mod) => {
         viewerController = mod.initViewer({ apiBase: API_BASE, clientId: clientScope?.id || null });
         initViewerControls();
@@ -301,6 +301,51 @@ let layerConfigs = {
   pads: { depth: '-0.06', feedRate: '120', toolDiameter: '0.1', millSpeed: '10000', isolationWidth: '0.1', isolationSteps: '0' }
 };
 
+const MOTION_MODE_STORAGE_KEY = 'cnc.workstation.motion-mode';
+const MOTION_MODE_Z = 'z';
+const MOTION_MODE_SERVO = 'servo';
+const motionModeSelects = Array.from(document.querySelectorAll('[data-motion-mode-select]'));
+
+const normalizeMotionMode = (value) => {
+  const mode = String(value || MOTION_MODE_Z).trim().toLowerCase();
+  return mode === MOTION_MODE_SERVO ? MOTION_MODE_SERVO : MOTION_MODE_Z;
+};
+
+let motionMode = MOTION_MODE_Z;
+
+const getMotionModeLabel = (value = motionMode) => normalizeMotionMode(value) === MOTION_MODE_SERVO ? 'Servo / M300' : 'Eje Z real';
+
+const syncMotionModeControls = (value) => {
+  motionMode = normalizeMotionMode(value);
+  motionModeSelects.forEach((select) => {
+    if (select.value !== motionMode) {
+      select.value = motionMode;
+    }
+  });
+
+  try {
+    localStorage.setItem(MOTION_MODE_STORAGE_KEY, motionMode);
+  } catch (err) {}
+};
+
+const initMotionModeControls = () => {
+  try {
+    motionMode = normalizeMotionMode(localStorage.getItem(MOTION_MODE_STORAGE_KEY));
+  } catch (err) {
+    motionMode = MOTION_MODE_Z;
+  }
+
+  motionModeSelects.forEach((select) => {
+    select.value = motionMode;
+    select.addEventListener('change', (e) => syncMotionModeControls(e.target.value));
+  });
+};
+
+const buildJobConfig = () => ({
+  ...layerConfigs,
+  motionMode,
+});
+
 let currentConfig = {
   pcbWidth: '',
   pcbHeight: '',
@@ -314,6 +359,7 @@ let currentConfig = {
 
 const workflowSteps = document.querySelectorAll('.workflow-step');
 const stepItems = document.querySelectorAll('.step-item');
+initMotionModeControls();
 applyModeCopy();
 
 // Workflow Logic
@@ -335,8 +381,8 @@ const setStep = (step) => {
 
 const isStepValid = (step) => {
     if (step === 1) return !!currentJobId;
-    if (step === 2) return true; // CAM
-    if (step === 3) return !!activeViewerGcode; // Simulación
+    if (step === 2) return !!currentJobId; // Asegurar que hay un job para CAM
+    if (step === 3) return !!currentJobId; // Permitir ir a Ejecución si hay un job, aunque no haya G-code combinado
     return true;
 };
 
@@ -425,7 +471,7 @@ window.prepareJob = async (jobId) => {
     try {
         currentJobId = jobId;
         
-        if (currentMode === 'printshop') {
+        if (currentMode !== 'saas') {
             if (statusBadge) {
                 statusBadge.textContent = "Procesando Gerber...";
                 statusBadge.className = "badge info";
@@ -435,13 +481,13 @@ window.prepareJob = async (jobId) => {
             if (!response.ok) throw new Error(data.error);
             
             updateExecutionList(data);
-            if (data.combined_gcode) setActiveViewerGcode(data.combined_gcode);
+            setActiveViewerGcode(data.combined_gcode || null);
             ensureViewerController().then((vc) => {
                 if (vc?.loadJobLayers) vc.loadJobLayers(data);
             });
             setStep(2); // Ir a CAM (Análisis de Precio)
         } else {
-            // MODO SaaS / Education
+            // MODO SaaS / Operador
             if (statusBadge) {
                 statusBadge.textContent = "Midiendo PCB...";
                 statusBadge.className = "badge info";
@@ -455,6 +501,7 @@ window.prepareJob = async (jobId) => {
                 dimensions: { widthMm: data.dimensions.width_mm, heightMm: data.dimensions.height_mm },
                 area_mm2: data.dimensions.area_mm2,
                 price_bs: data.dimensions.price_bs,
+                config: buildJobConfig(),
                 uploadedAt: new Date().toISOString(),
                 status: 'RECEIVED',
                 stage: 'Recibido',
@@ -462,6 +509,7 @@ window.prepareJob = async (jobId) => {
                 alias: 'Anónimo'
             });
 
+            setActiveViewerGcode(null); // Activa el botón de aprobar si hay un jobId
             setStep(2); // Ir directamente a CAM (Saltando Nesting)
             if (statusBadge) {
                 statusBadge.textContent = "Listo para procesar";
@@ -551,6 +599,8 @@ const renderRecentFile = (upload) => {
   const t = config.traces || {};
   const o = config.outline || {};
   const p = config.pads || {};
+  const motionModeValue = normalizeMotionMode(config.motionMode || config.motion_mode || motionMode);
+  syncMotionModeControls(motionModeValue);
 
   // Cantidad (default 1)
   const qty = upload.quantity || 1;
@@ -563,6 +613,7 @@ const renderRecentFile = (upload) => {
     ${describeClient(upload) ? `<div><strong>Origen</strong><span>${describeClient(upload)}</span></div>` : ''}
     <div><strong>Llave</strong><span>${upload.verificationKey || '--'}</span></div>
     <div><strong>Estado</strong><span>${upload.publishedToOperator ? 'En cola del operador' : 'Borrador privado'}</span></div>
+    <div><strong>Modo</strong><span>${getMotionModeLabel(motionModeValue)}</span></div>
     <div><strong>Dimensiones</strong><span>${upload.dimensions?.widthMm ?? 'n/a'} × ${upload.dimensions?.heightMm ?? 'n/a'} mm</span></div>
     <div><strong>Área</strong><span>${upload.area_mm2 ?? 'n/a'} mm²</span></div>
     
@@ -645,7 +696,8 @@ const updatePrintshopMonitor = (upload) => {
 
 const setActiveViewerGcode = (name) => {
   activeViewerGcode = name || null;
-  if (confirmButton) confirmButton.disabled = !activeViewerGcode;
+  // Habilitar el botón siempre que haya un trabajo activo o un G-code seleccionado
+  if (confirmButton) confirmButton.disabled = !(activeViewerGcode || currentJobId);
 };
 
 const updateExecutionList = (job) => {
@@ -870,6 +922,8 @@ if (layerForm) {
                 layerModal.style.display = 'none';
                 layerModal.classList.remove('is-open');
 
+                setActiveViewerGcode(result.combined_gcode || null);
+
                 if (result.layers) {
                     // Actualizar el G-code combinado si el servidor lo envió
                     if (result.combined_gcode) {
@@ -980,7 +1034,7 @@ if (uploadForm && isPanel) {
     withClientFormData(payload);
     
     // Send full config object
-    payload.append('config', JSON.stringify(layerConfigs));
+    payload.append('config', JSON.stringify(buildJobConfig()));
 
     try {
       const response = await fetch(`${API_BASE}/upload`, { method: 'POST', body: payload });
@@ -990,9 +1044,7 @@ if (uploadForm && isPanel) {
 
       if (currentMode === 'education' || currentMode === 'printshop') {
           // MODO LOCAL / DISEÑADOR: Procesar automáticamente para ver precio y simulación
-          uploadFeedback.textContent = currentMode === 'printshop'
-            ? 'Proyecto recibido. Analizando precio y preparando simulación...'
-            : '¡Archivo cargado! Procesando...';
+          uploadFeedback.textContent = 'Proyecto recibido. Analizando precio y preparando simulación...';
           clearSelectedFiles();
           window.prepareJob(data.id);
       } else {
@@ -1028,6 +1080,7 @@ if (configForm && isPanel) {
   configForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = new FormData(configForm);
+    syncMotionModeControls(data.get('motionMode') || motionMode);
     
     // Build separate configs
     layerConfigs = {
@@ -1064,12 +1117,12 @@ if (configForm && isPanel) {
             const response = await fetch(withClientScope(`${API_BASE}/reprocess/`), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(withClientJson({ jobId: currentJobId, config: layerConfigs }))
+                body: JSON.stringify(withClientJson({ jobId: currentJobId, config: buildJobConfig() }))
             });
             const result = await response.json();
             if (result.layers) {
                 updateExecutionList(result);
-                if (result.combined_gcode) setActiveViewerGcode(result.combined_gcode);
+                setActiveViewerGcode(result.combined_gcode || null);
                 ensureViewerController().then((vc) => {
                     if (vc?.loadJobLayers) vc.loadJobLayers(result);
                 });
@@ -1116,7 +1169,7 @@ confirmButton?.addEventListener('click', async () => {
     if (currentMode === 'printshop') {
       const result = await publishCurrentJob();
       if (confirmFeedback) confirmFeedback.textContent = result.message || 'Trabajo publicado para el operador.';
-      setStep(5);
+      setStep(4);
     } else {
       const response = await fetch(`${API_BASE}/viewer/send`, {
         method: 'POST',
@@ -1125,7 +1178,7 @@ confirmButton?.addEventListener('click', async () => {
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Error al enviar.');
-      setStep(5);
+      setStep(4);
       fetchStatus();
     }
   } catch (err) {
@@ -1197,7 +1250,7 @@ if (isPanel) {
               const latestJob = jobs[0];
               currentJobId = latestJob.id;
               updateExecutionList(latestJob);
-              if (latestJob.combined_gcode) setActiveViewerGcode(latestJob.combined_gcode);
+              setActiveViewerGcode(latestJob.combined_gcode || null);
               vc.loadJobLayers(latestJob);
           }
       });

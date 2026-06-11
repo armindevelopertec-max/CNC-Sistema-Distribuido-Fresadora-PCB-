@@ -44,7 +44,6 @@ def sheet_visual_preview(request, sheet_id=None):
     if not sheet:
         return HttpResponse('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200"><rect width="100%" height="100%" fill="#1e293b" /><text x="10" y="20" fill="white">No hay lámina activa</text></svg>', content_type="image/svg+xml")
 
-    # Crear SVG
     width = sheet.width
     height = sheet.height
     
@@ -53,14 +52,11 @@ def sheet_visual_preview(request, sheet_id=None):
         f'<rect width="{width}" height="{height}" fill="#1e293b" />' # Fondo oscuro
     ]
     
-    # Dibujar áreas libres (en verde tenue o rayado)
     for area in sheet.free_areas:
         svg.append(f'<rect x="{area["x"]}" y="{area["y"]}" width="{area["w"]}" height="{area["h"]}" fill="#064e3b" stroke="#10b981" stroke-width="0.5" />')
         
-    # Dibujar áreas ocupadas (en naranja/ámbar)
     for area in sheet.used_areas:
         svg.append(f'<rect x="{area["x"]}" y="{area["y"]}" width="{area["w"]}" height="{area["h"]}" fill="#78350f" stroke="#fbbf24" stroke-width="0.5" />')
-        # Añadir texto con el ID del job o alias si es posible
         job_id = area.get('job_id')
         if job_id:
             svg.append(f'<text x="{area["x"]+2}" y="{area["y"]+10}" font-family="sans-serif" font-size="8" fill="#fbbf24">PCB #{str(job_id)[:4]}</text>')
@@ -257,21 +253,17 @@ def reprocess_layer(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body or '{}')
-            # Intentar obtener job_id de varias fuentes
             job_id = data.get('jobId') or data.get('job_id') or request.GET.get('job_id')
             layer_type = data.get('layerType')
             new_config = data.get('config')
             client_id = get_client_scope(request, data)
 
-            # Búsqueda más flexible del trabajo
             if client_id:
                 job = PCBJob.objects.filter(id=job_id, client_id=client_id).first()
             else:
-                # Si no hay client_id, solo permitir si está publicado al operador
                 job = PCBJob.objects.filter(id=job_id, published_to_operator=True).first()
 
             if not job:
-                # Si aún no se encuentra, intentar buscar sin client_id solo si es Admin (DEBUG/Local)
                 if not client_id and settings.DEBUG:
                      job = PCBJob.objects.filter(id=job_id).first()
                 
@@ -280,12 +272,10 @@ def reprocess_layer(request):
                     return JsonResponse({'error': message}, status=404)
 
             if layer_type:
-                # Actualizar solo la config de esa capa preservando el resto
                 if not isinstance(job.config, dict):
                     job.config = {}
                 job.config[layer_type] = new_config
             else:
-                # Actualizar toda la configuración
                 job.config = new_config
 
             job.save()
@@ -401,7 +391,6 @@ def viewer_send(request):
     """Compatible con /api/viewer/send"""
     if request.method == 'POST':
         try:
-            # En la versión Django, podemos recibir el nombre del archivo
             data = json.loads(request.body or '{}')
             filename = data.get('name')
             job_id = data.get('jobId')
@@ -427,15 +416,39 @@ def viewer_send(request):
                 message = 'No hay ningún G-code listo para enviar.' if not client_id else 'No hay ningún G-code listo para enviar en esta estación.'
                 return JsonResponse({'error': message}, status=400)
             
-            # Aquí dispararíamos el envío real si tuviéramos la lógica asíncrona implementada
-            # Por ahora simularemos que inicia
+            layer_type = data.get('layerType')
+            file_to_send = None
+            
+            if layer_type == 'traces' and job.traces_gcode:
+                file_to_send = job.traces_gcode.path
+            elif layer_type == 'outline' and job.outline_gcode:
+                file_to_send = job.outline_gcode.path
+            elif layer_type == 'pads' and job.pads_gcode:
+                file_to_send = job.pads_gcode.path
+            elif filename:
+                for candidate in (job.traces_gcode, job.outline_gcode, job.pads_gcode, job.gcode_file):
+                    if candidate and os.path.basename(candidate.name) == os.path.basename(filename):
+                        file_to_send = candidate.path
+                        break
+            
+            if not file_to_send:
+                file_to_send = (job.gcode_file.path if job.gcode_file else None) or \
+                               (job.traces_gcode.path if job.traces_gcode else None) or \
+                               (job.outline_gcode.path if job.outline_gcode else None) or \
+                               (job.pads_gcode.path if job.pads_gcode else None)
+
+            if not file_to_send or not os.path.exists(file_to_send):
+                return JsonResponse({'error': 'No se encontró el archivo G-code físico para enviar.'}, status=404)
+
+            job.active_gcode_file = file_to_send
             job.status = 'SENDING'
             job.completed_at = None
             job.save()
             
             return JsonResponse({
-                'message': f'Envío de {job.original_name} iniciado.',
+                'message': f'Envío de {os.path.basename(file_to_send)} iniciado.',
                 'jobId': job.id,
+                'layerType': layer_type,
                 'clientId': job.client_id or None,
                 'verificationKey': job.verification_key,
             })
@@ -485,10 +498,9 @@ def reset_placement(request, job_id):
             job.placement_x = 0.0
             job.placement_y = 0.0
             job.sheet = None
-            job.status = 'RECEIVED' # Volver a estado inicial
+            job.status = 'RECEIVED' 
             job.save()
             
-            # Reprocesar automáticamente sin offsets
             success, message = process_gerber_to_gcode(job.id)
             
             if success:
@@ -507,7 +519,6 @@ def list_viewer_files(request):
     data = []
     for job in jobs:
         layers = []
-        # Solo añadir capas si el archivo existe físicamente
         if job.traces_gcode and os.path.exists(job.traces_gcode.path): 
             layers.append({'type': 'traces', 'name': os.path.basename(job.traces_gcode.name)})
         if job.outline_gcode and os.path.exists(job.outline_gcode.path): 
@@ -515,7 +526,6 @@ def list_viewer_files(request):
         if job.pads_gcode and os.path.exists(job.pads_gcode.path): 
             layers.append({'type': 'pads', 'name': os.path.basename(job.pads_gcode.name)})
         
-        # Si no hay ninguna capa física, omitir este trabajo de la lista del visor
         if not layers and not (job.gcode_file and os.path.exists(job.gcode_file.path)):
             continue
 
@@ -547,7 +557,6 @@ def get_viewer_gcode(request):
     if job_id:
         job = queryset.filter(id=job_id).first()
     
-    # Intento de búsqueda por nombre de archivo si no hay ID
     if not job and name:
         name_clean = os.path.basename(name)
         job = queryset.filter(
@@ -578,13 +587,11 @@ def get_viewer_gcode(request):
                 break
 
     if not file_obj:
-        # Fallback al archivo combinado o cualquiera disponible
         file_obj = job.gcode_file or job.traces_gcode or job.outline_gcode or job.pads_gcode
 
     if not file_obj or not file_obj.name:
         return HttpResponse('El trabajo no tiene archivos G-code asociados', status=404)
     
-    # Búsqueda física robusta
     possible_paths = [
         file_obj.path,
         os.path.join(settings.MEDIA_ROOT, file_obj.name),
@@ -611,7 +618,6 @@ def stream_cnc_runtime(request):
     jobs, _ = visible_jobs(request, PCBJob.objects.filter(status__in=['SENDING', 'READY']))
     job = jobs.order_by('-created_at').first()
     if not job:
-        # Stream vacío si no hay trabajo
         return StreamingHttpResponse(iter([]), content_type='text/event-stream')
         
     response = StreamingHttpResponse(cnc_stream_generator(job.id), content_type='text/event-stream')
@@ -624,10 +630,7 @@ def reset_cnc(request):
     """Compatible con /api/cnc/reset"""
     import serial
     try:
-        # Intentar resetear vía serial si el puerto está disponible
-        # ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
-        # ser.write(b"RESET\n")
-        # ser.close()
+    
         return JsonResponse({'status': 'ok', 'message': 'CNC reseteada (simulado)'})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
@@ -650,7 +653,6 @@ def gerber_preview(request):
         
         output_img = temp_path + ".png"
         try:
-            # Intentar usar gerbv para generar una miniatura rápida
             subprocess.run([
                 'gerbv', '-x', 'png', '-o', output_img, 
                 '--background=#030711', '--foreground=#a5b4fc',

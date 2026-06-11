@@ -1,10 +1,14 @@
+import os
 import shutil
+import subprocess
 import tempfile
+from unittest.mock import patch
 
 from django.test import TestCase, override_settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from .models import PCBJob
+from .services import process_gerber_to_gcode
 
 
 class UploadGerberTests(TestCase):
@@ -213,6 +217,103 @@ class UploadGerberTests(TestCase):
         job_b.refresh_from_db()
         self.assertEqual(job_a.status, 'SENDING')
         self.assertEqual(job_b.status, 'READY')
+
+    @patch('core.services.subprocess.run')
+    def test_process_gerber_preserves_original_gcode_without_servo(self, mock_run):
+        job = PCBJob.objects.create(
+            original_name='board.gb1',
+            alias='PC A',
+            client_id='station-a',
+            client_label='Estación A',
+            status='RECEIVED',
+            traces_file=SimpleUploadedFile('board.gb1', b'gb1-data'),
+        )
+
+        original_gcode = '(original)\nG21\nG1 X10 Y10 Z-0.06\n'
+
+        def fake_run(args, capture_output, text, check, cwd):
+            out_path = args[args.index('--front-output') + 1]
+            with open(out_path, 'w', encoding='utf-8') as f:
+                f.write(original_gcode)
+            return subprocess.CompletedProcess(
+                args=args,
+                returncode=0,
+                stdout='Height: 1.00in Width: 2.00in',
+                stderr='',
+            )
+
+        mock_run.side_effect = fake_run
+
+        success, message = process_gerber_to_gcode(job.id)
+
+        self.assertTrue(success, msg=message)
+        job.refresh_from_db()
+        self.assertIsNotNone(job.traces_gcode)
+        self.assertTrue(os.path.exists(job.traces_gcode.path))
+
+        with open(job.traces_gcode.path, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        self.assertEqual(content, original_gcode)
+        self.assertNotIn('M300', content)
+        self.assertNotIn('G0 X0 Y0', content)
+
+    @patch('core.services.subprocess.run')
+    def test_process_gerber_rewrites_gcode_for_servo_mode(self, mock_run):
+        job = PCBJob.objects.create(
+            original_name='servo-board.gb1',
+            alias='PC Servo',
+            client_id='station-servo',
+            client_label='Estación Servo',
+            status='RECEIVED',
+            traces_file=SimpleUploadedFile('servo-board.gb1', b'gb1-data'),
+            config={'motionMode': 'servo'},
+        )
+
+        original_gcode = '\n'.join([
+            'G21',
+            'G0 Z5.0',
+            'G0 X0.0 Y0.0',
+            'G1 Z-0.06',
+            'G1 X1.0 Y1.0',
+            'M30',
+            '',
+        ])
+
+        def fake_run(args, capture_output, text, check, cwd):
+            out_path = args[args.index('--front-output') + 1]
+            with open(out_path, 'w', encoding='utf-8') as f:
+                f.write(original_gcode)
+            return subprocess.CompletedProcess(
+                args=args,
+                returncode=0,
+                stdout='Height: 1.00in Width: 2.00in',
+                stderr='',
+            )
+
+        mock_run.side_effect = fake_run
+
+        success, message = process_gerber_to_gcode(job.id)
+
+        self.assertTrue(success, msg=message)
+        job.refresh_from_db()
+        self.assertIsNotNone(job.traces_gcode)
+        self.assertTrue(os.path.exists(job.traces_gcode.path))
+
+        with open(job.traces_gcode.path, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        self.assertIn('G21', content)
+        self.assertIn('M300 S50', content)
+        self.assertIn('M300 S30', content)
+        self.assertIn('G4 P150', content)
+        self.assertIn('G0 X0.0 Y0.0', content)
+        self.assertIn('G1 X1.0 Y1.0', content)
+        self.assertIn('M30', content)
+        self.assertNotIn('Z5.0', content)
+        self.assertNotIn('Z-0.06', content)
+        self.assertNotIn('G0 Z5.0', content)
+        self.assertNotIn('G1 Z-0.06', content)
 
     def test_printshop_jobs_stay_private_until_published(self):
         response = self._upload_job('Diseño privado', 'station-printshop', 'draft', workflow_mode='printshop')

@@ -2,7 +2,7 @@
 #include <Servo.h>
 
 // Servo pin based on firmware.ino
-const int penServoPin = 10;
+const int penServoPin = 9;
 Servo penServo;
 
 int currentPos = 90; // Starting position

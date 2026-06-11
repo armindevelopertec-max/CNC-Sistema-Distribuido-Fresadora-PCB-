@@ -15,7 +15,6 @@ class Sheet(models.Model):
     width = models.FloatField(help_text="Ancho de la lámina en mm")
     height = models.FloatField(help_text="Alto de la lámina en mm")
     
-    # areas: list of dicts {"x": 0, "y": 0, "w": 100, "h": 200}
     free_areas = models.JSONField(default=list, blank=True)
     used_areas = models.JSONField(default=list, blank=True)
     
@@ -51,16 +50,16 @@ class PCBJob(models.Model):
     outline_gcode = models.FileField(upload_to='gcode_output/', blank=True, null=True)
     pads_gcode = models.FileField(upload_to='gcode_output/', blank=True, null=True)
     
-    # Combined G-code for the final job
     gcode_file = models.FileField(upload_to='gcode_output/', blank=True, null=True)
+    
+    active_gcode_file = models.CharField(max_length=255, blank=True, null=True)
+    
     preview_img = models.ImageField(upload_to='previews/', blank=True, null=True)
     
-    # Dimensiones reales (Máximo 200x300mm)
     width_mm = models.FloatField(null=True, blank=True)
     height_mm = models.FloatField(null=True, blank=True)
     area_mm2 = models.FloatField(null=True, blank=True)
     
-    # Nesting / Placement
     sheet = models.ForeignKey(Sheet, on_delete=models.SET_NULL, null=True, blank=True, related_name='jobs')
     placement_x = models.FloatField(null=True, blank=True)
     placement_y = models.FloatField(null=True, blank=True)
@@ -68,7 +67,6 @@ class PCBJob(models.Model):
     placement_height = models.FloatField(null=True, blank=True, help_text="Alto incluyendo margen")
     margin_mm = models.FloatField(default=2.0)
 
-    # Costo en Bolivianos
     price_bs = models.FloatField(null=True, blank=True)
     
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='RECEIVED')
@@ -76,7 +74,6 @@ class PCBJob(models.Model):
     published_to_operator = models.BooleanField(default=True, db_index=True)
     completed_at = models.DateTimeField(null=True, blank=True)
     
-    # Configuración técnica (profundidad, feedrate, etc.)
     config = models.JSONField(default=dict, blank=True)
     
     created_at = models.DateTimeField(auto_now_add=True)

@@ -57,6 +57,15 @@
                 <input id="user-alias" name="alias" type="text" placeholder="Ej: Juan Pérez" style="width: 100%;">
               </div>
 
+              <div style="margin-bottom: 1rem;">
+                <label for="motion-mode-upload"><strong>Modo de movimiento</strong></label>
+                <select id="motion-mode-upload" name="motionMode" data-motion-mode-select style="width: 100%; background: #0f172a; border: 1px solid var(--border); color: white; padding: 0.6rem 0.75rem; border-radius: 0.6rem;">
+                  <option value="z">Eje Z real</option>
+                  <option value="servo">Servo / M300</option>
+                </select>
+                <p class="viewer-hint" style="margin: 0.4rem 0 0;">Selecciona si el archivo se conserva con Z o se traduce a servo.</p>
+              </div>
+
               <div class="upload-zone" id="drop-zone">
                 <div class="upload-icon">📁</div>
                 <div class="upload-text">
@@ -119,6 +128,15 @@
             </div>
             
             <form id="config-form" class="config-form">
+              <div style="margin-bottom: 1rem;">
+                <label for="motion-mode-config"><strong>Modo de movimiento</strong></label>
+                <select id="motion-mode-config" name="motionMode" data-motion-mode-select style="width: 100%; background: #0f172a; border: 1px solid var(--border); color: white; padding: 0.6rem 0.75rem; border-radius: 0.6rem;">
+                  <option value="z">Eje Z real</option>
+                  <option value="servo">Servo / M300</option>
+                </select>
+                <p class="viewer-hint" style="margin: 0.4rem 0 0;">Elige el modo correcto antes de generar o reprocesar el G-code.</p>
+              </div>
+
               <!-- Sección Trazas -->
               <div class="config-tab-content active" id="tab-traces">
                 <div class="config-grid-layout">
@@ -386,6 +404,6 @@
       }
     }
   </script>
-  <script src="{% static 'core/script-v2.js' %}" type="module"></script>
+  <script src="{% static 'core/script-v2.js' %}?v=20260504" type="module"></script>
 </body>
 </html>

@@ -10,10 +10,9 @@ urlpatterns = [
     path('docs.html', documentation),
     path('api/', include('core.urls')),
     path('', home, name='index'),
-    path('index.html', home), # Compatibilidad
+    path('index.html', home),
     path('panel', panel, name='panel'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# En desarrollo, Django sirve static automáticamente si está configurado en settings
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

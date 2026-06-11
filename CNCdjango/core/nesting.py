@@ -27,7 +27,6 @@ class NestingService:
         """
         job = PCBJob.objects.get(id=job_id)
         
-        # Dimensiones efectivas con margen
         pw = job.width_mm + (2 * margin)
         ph = job.height_mm + (2 * margin)
         
@@ -36,30 +35,24 @@ class NestingService:
         else:
             sheet = NestingService.get_or_create_active_sheet()
 
-        # Algoritmo de Guillotina simple (First Fit)
         best_area_idx = -1
         
         for i, area in enumerate(sheet.free_areas):
-            # Probar orientación original
             if area['w'] >= pw and area['h'] >= ph:
                 best_area_idx = i
                 break
-            # Probar rotación 90° (opcional, pero útil)
             if area['w'] >= ph and area['h'] >= pw:
-                # Rotamos el PCB para este espacio
                 pw, ph = ph, pw
                 best_area_idx = i
                 break
         
         if best_area_idx == -1:
-            # No cabe en esta lámina. ¿Deberíamos crear una nueva?
-            if not sheet_id: # Solo auto-creamos si no se especificó una lámina concreta
+            if not sheet_id:
                 sheet.is_active = False
                 sheet.save()
                 return NestingService.place_pcb(job_id, margin=margin)
             return False, "No hay espacio suficiente en la lámina seleccionada."
 
-        # Colocar en la zona encontrada
         area = sheet.free_areas.pop(best_area_idx)
         
         job.sheet = sheet
@@ -71,23 +64,18 @@ class NestingService:
         job.status = 'PANELIZING'
         job.save()
 
-        # Registrar área usada
         used_rect = {"x": area['x'], "y": area['y'], "w": pw, "h": ph, "job_id": job.id}
         sheet.used_areas.append(used_rect)
 
-        # Dividir el área restante (Corte de Guillotina)
-        # Decidimos por qué lado cortar basándonos en cuál deja el área restante más "cuadrada"
         remain_w = area['w'] - pw
         remain_h = area['h'] - ph
 
         if remain_w > remain_h:
-            # Corte vertical primero
             if remain_w > 0:
                 sheet.free_areas.append({"x": area['x'] + pw, "y": area['y'], "w": remain_w, "h": area['h']})
             if remain_h > 0:
                 sheet.free_areas.append({"x": area['x'], "y": area['y'] + ph, "w": pw, "h": remain_h})
         else:
-            # Corte horizontal primero
             if remain_h > 0:
                 sheet.free_areas.append({"x": area['x'], "y": area['y'] + ph, "w": area['w'], "h": remain_h})
             if remain_w > 0:
@@ -108,7 +96,6 @@ class NestingService:
         if not job.sheet:
             return False, "El job no está asociado a ninguna lámina."
         
-        # Por ahora, simplemente quitamos la relación
         job.sheet = None
         job.placement_x = None
         job.placement_y = None

@@ -36,8 +36,6 @@ urlpatterns = [
     path('cnc/reset', reset_cnc),
     path('gerber/preview/', gerber_preview),
     path('gerber/preview', gerber_preview),
-
-    # Nuevas rutas de Nesting
     path('measure/<int:job_id>/', measure_pcb),
     path('measure/<int:job_id>', measure_pcb),
     path('nest/<int:job_id>/', nest_pcb),

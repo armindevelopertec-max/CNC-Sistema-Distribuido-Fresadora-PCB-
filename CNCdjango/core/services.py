@@ -13,59 +13,124 @@ PRICE_PER_MM2 = 0.002  # Bs/mm²
 MAX_WIDTH = 200.0      # mm
 MAX_HEIGHT = 300.0     # mm
 
-# --- Lógica de G-code ---
-PEN_UP = "M300 S50"
-PEN_DOWN = "M300 S30"
+MOTION_MODE_Z = 'z'
+MOTION_MODE_SERVO = 'servo'
+SERVO_UP_COMMAND = 'M300 S50'
+SERVO_DOWN_COMMAND = 'M300 S30'
+SERVO_DWELL_COMMAND = 'G4 P150'
 INCH_TO_MM = 25.4
 
-def convert_line(raw_line, current_units):
-    linea = re.sub(r"\(.*?\)", "", raw_line).strip()
-    if not linea:
-        return None
 
-    # Si es un comando de configuración/herramienta sin movimiento, filtrar
-    if any(linea.startswith(token) for token in ['M3', 'M5', 'M6', 'M0', 'T', 'S']):
-        if not linea.startswith('M300'):
-            return None
+def normalize_motion_mode(value):
+    mode = str(value or MOTION_MODE_Z).strip().lower()
+    return MOTION_MODE_SERVO if mode in {'servo', 'm300', 'plotter'} else MOTION_MODE_Z
 
-    # Función para convertir unidades (pulgadas a mm)
-    def replace_unit(match):
-        factor = INCH_TO_MM if current_units == 'in' else 1
-        val = float(match.group(2)) * factor
-        return f"{match.group(1)}{val:.4f}"
 
-    # Aplicar conversión a X, Y y Z
-    linea = re.sub(r"([XYZ])([-+]?\d*\.\d+|\d+)", replace_unit, linea)
+def get_motion_mode(config):
+    if not isinstance(config, dict):
+        return MOTION_MODE_Z
+    return normalize_motion_mode(config.get('motionMode') or config.get('motion_mode'))
 
-    # Manejo especial para Z (Modo Servo M300)
-    if 'Z' in linea:
-        z_match = re.search(r"Z([-+]?\d*\.\d+|\d+)", linea)
+
+def strip_comments(raw_line):
+    return re.sub(r"\(.*?\)", "", raw_line).strip()
+
+
+def scale_line_units(line, current_units):
+    if current_units != 'in':
+        return line
+
+    def replace(match):
+        axis = match.group(1).upper()
+        value = float(match.group(2)) * INCH_TO_MM
+        return f"{axis}{value:.5f}"
+
+    return re.sub(r"([XYZFIJK])([-+]?\d*\.\d+|\d+)", replace, line)
+
+
+def is_motion_stub(line):
+    upper = line.upper().strip()
+    if not upper.startswith(('G0', 'G00', 'G1', 'G01')):
+        return False
+    return not any(axis in upper for axis in ('X', 'Y', 'I', 'J', 'K'))
+
+
+def rewrite_gcode_for_motion_mode(file_path, motion_mode):
+    if normalize_motion_mode(motion_mode) != MOTION_MODE_SERVO:
+        return False
+
+    with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+        lines = f.readlines()
+
+    converted_lines = []
+    current_units = 'mm'
+    servo_state = None
+
+    for raw_line in lines:
+        stripped = raw_line.rstrip('\r\n')
+        if not stripped.strip():
+            converted_lines.append('')
+            continue
+
+        clean = strip_comments(stripped)
+        if not clean:
+            continue
+
+        upper = clean.upper()
+
+        if re.match(r'^M0?3\b', upper) or re.match(r'^M0?5\b', upper) or re.match(r'^M0?6\b', upper) or re.match(r'^M0?0\b', upper) or re.match(r'^T\d+\b', upper):
+            continue
+
+        if 'G20' in upper:
+            current_units = 'in'
+            converted_lines.append('G21')
+            continue
+
+        if 'G21' in upper:
+            current_units = 'mm'
+            converted_lines.append('G21')
+            continue
+
+        z_match = re.search(r'Z([-+]?\d*\.\d+|\d+)', clean, re.I)
         if z_match:
             z_val = float(z_match.group(1))
-            servo_cmd = f"{PEN_DOWN if z_val <= 0 else PEN_UP}\nG4 P150"
-            
-            # Limpiar el Z de la línea original para mantener X e Y
-            linea_clean = re.sub(r"Z[-+]?\d*\.\d+|Z\d+", "", linea).strip()
-            # Si queda movimiento en X o Y, retornar ambos
-            if any(axis in linea_clean.upper() for axis in 'XY'):
-                return f"{linea_clean}\n{servo_cmd}"
-            return servo_cmd
+            desired_state = 'down' if z_val <= 0 else 'up'
+            if desired_state != servo_state:
+                converted_lines.append(SERVO_DOWN_COMMAND if desired_state == 'down' else SERVO_UP_COMMAND)
+                converted_lines.append(SERVO_DWELL_COMMAND)
+                servo_state = desired_state
 
-    if "G20" in linea.upper():
-        return "G21"
-    
-    return linea
+            line_without_z = re.sub(r'Z[-+]?\d*\.\d+|Z\d+', '', clean, flags=re.I).strip()
+            if line_without_z:
+                scaled_line = scale_line_units(line_without_z, current_units)
+                if not is_motion_stub(scaled_line):
+                    converted_lines.append(scaled_line)
+            continue
+
+        scaled_line = scale_line_units(clean, current_units)
+        if is_motion_stub(scaled_line):
+            continue
+        converted_lines.append(scaled_line)
+
+    with open(file_path, 'w', encoding='utf-8') as f:
+        f.write("\n".join(converted_lines).rstrip() + "\n")
+
+    return True
 
 def parse_axes(line, current):
     line_upper = line.strip().upper()
     result = current.copy()
+    if 'M300' in line_upper:
+        s_match = re.search(r"S([-+]?\d*\.\d+|\d+)", line_upper)
+        if s_match:
+            s_val = float(s_match.group(1))
+            result['Z'] = -1.0 if s_val <= 35 else 5.0
     for axis in ['X', 'Y', 'Z']:
         match = re.search(rf"{axis}([-+]?\d*\.\d+|\d+)", line_upper)
         if match:
             result[axis] = float(match.group(1))
     return result
 
-# --- Procesamiento Gerber ---
 def extract_dimensions(stdout):
     regex = r"Height:\s*([\d.]+)in.*Width:\s*([\d.]+)in"
     match = re.search(regex, stdout)
@@ -105,7 +170,6 @@ def extract_pcb_dimensions(job_id):
         result = subprocess.run(args, capture_output=True, text=True, check=True)
         dims = extract_dimensions(result.stdout)
 
-        # Cleanup temp file immediately
         if os.path.exists(temp_ngc):
             os.remove(temp_ngc)
 
@@ -145,6 +209,8 @@ def process_gerber_to_gcode(job_id):
     job = PCBJob.objects.get(id=job_id)
     job.status = 'PROCESSING'
     job.completed_at = None
+    if not isinstance(job.config, dict):
+        job.config = {}
     job.save()
 
     output_dir = os.path.join(settings.MEDIA_ROOT, 'gcode_output')
@@ -159,6 +225,12 @@ def process_gerber_to_gcode(job_id):
     y_offset = job.placement_y or 0.0
 
     config = job.config
+    motion_mode = get_motion_mode(config)
+    if config.get('motionMode') != motion_mode:
+        config['motionMode'] = motion_mode
+        job.config = config
+        job.save(update_fields=['config'])
+
     t_cfg = config.get('traces', {})
     o_cfg = config.get('outline', {})
     p_cfg = config.get('pads', {})
@@ -199,7 +271,6 @@ def process_gerber_to_gcode(job_id):
                 '--drill-feed', p_cfg.get('feedRate', '120'),
             ]
         else:
-            # Si es Gerber, lo tratamos como una capa de fresado (front)
             args = [
                 '--front', job.pads_file.path,
                 '--front-output', out_path,
@@ -231,7 +302,6 @@ def process_gerber_to_gcode(job_id):
         ]
         layers_to_run.append({'type': 'outline', 'args': args, 'path': out_path, 'field': 'outline_gcode', 'name': out_name})
 
-    combined_gcode_content = []
     first_stdout = ""
 
     try:
@@ -249,26 +319,10 @@ def process_gerber_to_gcode(job_id):
                 first_stdout = result.stdout
 
             if os.path.exists(layer['path']):
-                with open(layer['path'], 'r') as f:
-                    lines = f.readlines()
-
-                processed_lines = []
-                current_units = 'mm'
-                for line in lines:
-                    upper = line.upper()
-                    if 'G20' in upper: current_units = 'in'
-                    elif 'G21' in upper: current_units = 'mm'
-                    converted = convert_line(line, current_units)
-                    if converted: processed_lines.append(converted + "\n")
-
-                with open(layer['path'], 'w') as f:
-                    f.writelines(processed_lines)
-
+                rewrite_gcode_for_motion_mode(layer['path'], motion_mode)
                 getattr(job, layer['field']).name = f"gcode_output/{layer['name']}"
-                combined_gcode_content.extend(processed_lines)
-                print(f"✅ Capa procesada: {layer['type']}")
+                print(f"✅ Capa generada: {layer['type']} ({motion_mode})")
 
-        # Extraer dimensiones del primer stdout capturado
         dims = extract_dimensions(first_stdout)
         if dims:
             job.width_mm = dims['width']
@@ -276,13 +330,7 @@ def process_gerber_to_gcode(job_id):
             job.area_mm2 = round(job.width_mm * job.height_mm, 2)
             job.price_bs = round(job.area_mm2 * PRICE_PER_MM2, 2)
 
-        if combined_gcode_content:
-            final_filename = f"combined_{job.id}.ngc"
-            final_path = os.path.join(output_dir, final_filename)
-            with open(final_path, 'w') as f:
-                f.writelines(combined_gcode_content)
-
-            job.gcode_file.name = f"gcode_output/{final_filename}"
+        if layers_to_run:
             job.status = 'READY'
             job.save()
             return True, "Procesamiento completado con éxito."
@@ -307,55 +355,49 @@ def process_gerber_to_gcode(job_id):
         job.save()
         return False, str(e)
 
-# --- Transmisión Serial ---
 def cnc_stream_generator(job_id, port='/dev/ttyACM0', baud=9600):
     job = PCBJob.objects.get(id=job_id)
-    if not job.gcode_file:
-        yield f"data: {json.dumps({'event': 'error', 'message': 'No hay G-code'})}\n\n"
-        return
+    gcode_path = job.active_gcode_file
+    
+    if not gcode_path or not os.path.exists(gcode_path):
+        if job.gcode_file and os.path.exists(job.gcode_file.path):
+            gcode_path = job.gcode_file.path
+        else:
+            yield f"data: {json.dumps({'event': 'error', 'message': 'No hay archivo G-code activo para enviar'})}\n\n"
+            return
 
     job.status = 'SENDING'
     job.save()
 
     try:
-        with open(job.gcode_file.path, 'r') as f:
-            commands = [line.strip() for line in f if line.strip()]
+        with open(gcode_path, 'r') as f:
+            commands = [line.rstrip('\r\n') for line in f if line.strip()]
 
         ser = serial.Serial(port, baud, timeout=1)
-        time.sleep(2) # Esperar a Arduino
+        time.sleep(2)
         ser.reset_input_buffer()
 
-        current_units = 'mm'
         current_pos = {'X': 0.0, 'Y': 0.0, 'Z': 0.0}
         total = len(commands)
 
         for i, raw_line in enumerate(commands):
-            upper = raw_line.upper()
-            if 'G20' in upper: current_units = 'in'
-            elif 'G21' in upper: current_units = 'mm'
+            ser.write(f"{raw_line}\n".encode('ascii', errors='ignore'))
+            while True:
+                resp = ser.readline().decode(errors='ignore').strip()
+                if 'ok' in resp.lower():
+                    break
+                time.sleep(0.005)
 
-            cmd = convert_line(raw_line, current_units)
-            if cmd:
-                for sub_cmd in cmd.split('\n'):
-                    sub_cmd = sub_cmd.strip()
-                    if not sub_cmd: continue
-                    
-                    ser.write(f"{sub_cmd}\n".encode('ascii'))
-                    while True:
-                        resp = ser.readline().decode(errors='ignore').strip()
-                        if 'ok' in resp.lower(): break
-                        time.sleep(0.005)
-
-                current_pos = parse_axes(raw_line, current_pos)
-                telemetry = {
-                    'event': 'telemetry',
-                    'x': current_pos['X'],
-                    'y': current_pos['Y'],
-                    'z': current_pos['Z'],
-                    'progress': round((i / total) * 100),
-                    'command': raw_line
-                }
-                yield f"data: {json.dumps(telemetry)}\n\n"
+            current_pos = parse_axes(raw_line, current_pos)
+            telemetry = {
+                'event': 'telemetry',
+                'x': current_pos['X'],
+                'y': current_pos['Y'],
+                'z': current_pos['Z'],
+                'progress': round((i / total) * 100),
+                'command': raw_line
+            }
+            yield f"data: {json.dumps(telemetry)}\n\n"
 
         ser.close()
         job.status = 'COMPLETED'
