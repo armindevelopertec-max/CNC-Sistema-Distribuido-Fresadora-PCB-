@@ -627,12 +627,21 @@ def stream_cnc_runtime(request):
 
 @csrf_exempt
 def reset_cnc(request):
-    """Compatible con /api/cnc/reset"""
-    import serial
+    """Parada de emergencia: activa el flag global para que services.py tome el mando."""
+    from .services import trigger_emergency_stop
     try:
-    
-        return JsonResponse({'status': 'ok', 'message': 'CNC reseteada (simulado)'})
+        print("🔔 [VIEW] Recibida petición de Parada de Emergencia")
+        trigger_emergency_stop()
+        
+        # Marcar como fallido en DB por si acaso
+        job = PCBJob.objects.filter(status='SENDING').first()
+        if job:
+            job.status = 'FAILED'
+            job.save()
+
+        return JsonResponse({'status': 'ok', 'message': 'Parada solicitada. Regresando al origen...'})
     except Exception as e:
+        print(f"❌ [VIEW] Error en parada: {str(e)}")
         return JsonResponse({'error': str(e)}, status=500)
 
 @csrf_exempt

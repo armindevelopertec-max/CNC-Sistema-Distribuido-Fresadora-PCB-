@@ -111,6 +111,45 @@ const confirmFeedback = document.getElementById('confirm-feedback');
 const navSerialStatus = document.getElementById('nav-serial-status');
 const realtimeToggle = document.getElementById('realtime-toggle');
 const resetCncButton = document.getElementById('reset-cnc-btn');
+const emergencyStopBtn = document.getElementById('emergency-stop-btn');
+
+const triggerEmergencyStop = async (e) => {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    console.warn("🚨 [UI] BOTÓN DE EMERGENCIA PULSADO");
+    
+    // Feedback visual inmediato
+    if (emergencyStopBtn) {
+        emergencyStopBtn.style.opacity = "0.5";
+        emergencyStopBtn.textContent = "DETENIENDO...";
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/cnc/reset`, { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+        console.log("✅ [SERVER RESPONSE]:", data);
+        // Eliminado alert() para que no bloquee la interfaz
+        if (activeLayerInfo) activeLayerInfo.textContent = data.message || 'Deteniendo...';
+        fetchStatus(); 
+    } catch (err) {
+        console.error("❌ Error en parada de emergencia:", err);
+        alert("Error al intentar detener la CNC: " + err.message);
+    } finally {
+        if (emergencyStopBtn) {
+            emergencyStopBtn.style.opacity = "1";
+            emergencyStopBtn.textContent = "PARADA DE EMERGENCIA";
+        }
+    }
+};
+
+if (resetCncButton) resetCncButton.addEventListener('click', triggerEmergencyStop);
+if (emergencyStopBtn) emergencyStopBtn.addEventListener('click', triggerEmergencyStop);
+
 const executionLayersList = document.getElementById('execution-layers-list');
 const activeLayerInfo = document.getElementById('active-layer-info');
 const continueToSimBtn = document.getElementById('continue-to-sim-btn');

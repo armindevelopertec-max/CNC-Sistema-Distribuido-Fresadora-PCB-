@@ -4,6 +4,7 @@ import re
 import time
 import json
 import serial
+import threading
 from django.conf import settings
 from django.utils import timezone
 from .models import PCBJob
@@ -78,7 +79,8 @@ def rewrite_gcode_for_motion_mode(file_path, motion_mode):
 
         upper = clean.upper()
 
-        if re.match(r'^M0?3\b', upper) or re.match(r'^M0?5\b', upper) or re.match(r'^M0?6\b', upper) or re.match(r'^M0?0\b', upper) or re.match(r'^T\d+\b', upper):
+        # Preserve M3 and M5 for spindle support, but remove other common preamble/tool commands
+        if re.match(r'^M0?6\b', upper) or re.match(r'^M0?0\b', upper) or re.match(r'^T\d+\b', upper):
             continue
 
         if 'G20' in upper:
@@ -114,6 +116,8 @@ def rewrite_gcode_for_motion_mode(file_path, motion_mode):
 
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write("\n".join(converted_lines).rstrip() + "\n")
+        # Move back to origin, then Spindle OFF, then Steppers OFF
+        f.write("G0 X0 Y0\nM5\nM18\n")
 
     return True
 
@@ -355,16 +359,67 @@ def process_gerber_to_gcode(job_id):
         job.save()
         return False, str(e)
 
+class CNCManager:
+    _instance = None
+    _lock = threading.Lock()
+
+    def __new__(cls):
+        with cls._lock:
+            if cls._instance is None:
+                cls._instance = super(CNCManager, cls).__new__(cls)
+                cls._instance.ser = None
+                cls._instance.stop_event = threading.Event()
+                cls._instance.is_running = False  # Flag para evitar múltiples hilos
+                cls._instance.port = '/dev/ttyACM0'
+                cls._instance.baud = 9600
+            return cls._instance
+
+    def get_connection(self):
+        if self.ser and self.ser.is_open:
+            return self.ser
+        try:
+            self.ser = serial.Serial(self.port, self.baud, timeout=0.1)
+            time.sleep(2)
+            return self.ser
+        except Exception as e:
+            print(f"❌ Error abriendo puerto serial: {e}")
+            return None
+
+    def trigger_stop(self):
+        print("🚨 [CNCManager] EMERGENCY STOP REQUESTED!")
+        self.stop_event.set()
+
+    def clear_stop(self):
+        self.stop_event.clear()
+
+cnc_manager = CNCManager()
+
+def trigger_emergency_stop():
+    cnc_manager.trigger_stop()
+
+def get_serial_connection(port='/dev/ttyACM0', baud=9600):
+    cnc_manager.port = port
+    cnc_manager.baud = baud
+    return cnc_manager.get_connection()
+
 def cnc_stream_generator(job_id, port='/dev/ttyACM0', baud=9600):
+    # SIEMPRE limpiar el evento de parada al inicio de un nuevo envío
+    cnc_manager.clear_stop()
+    
+    if cnc_manager.is_running:
+        print("⚠️ [STREAMER] Intento de ejecución bloqueado: Ya hay un proceso corriendo.")
+        yield f"data: {json.dumps({'event': 'error', 'message': 'La CNC ya está ocupada'})}\n\n"
+        return
+
     job = PCBJob.objects.get(id=job_id)
     gcode_path = job.active_gcode_file
     
+    cnc_manager.is_running = True
+    
     if not gcode_path or not os.path.exists(gcode_path):
-        if job.gcode_file and os.path.exists(job.gcode_file.path):
-            gcode_path = job.gcode_file.path
-        else:
-            yield f"data: {json.dumps({'event': 'error', 'message': 'No hay archivo G-code activo para enviar'})}\n\n"
-            return
+        cnc_manager.is_running = False
+        yield f"data: {json.dumps({'event': 'error', 'message': 'Archivo no encontrado'})}\n\n"
+        return
 
     job.status = 'SENDING'
     job.save()
@@ -373,39 +428,88 @@ def cnc_stream_generator(job_id, port='/dev/ttyACM0', baud=9600):
         with open(gcode_path, 'r') as f:
             commands = [line.rstrip('\r\n') for line in f if line.strip()]
 
-        ser = serial.Serial(port, baud, timeout=1)
-        time.sleep(2)
-        ser.reset_input_buffer()
+        ser = get_serial_connection(port, baud)
+        if not ser:
+            cnc_manager.is_running = False
+            yield f"data: {json.dumps({'event': 'error', 'message': 'No se pudo conectar con la CNC'})}\n\n"
+            return
 
+        ser.reset_input_buffer()
         current_pos = {'X': 0.0, 'Y': 0.0, 'Z': 0.0}
         total = len(commands)
+        aborted = False
+
+        print(f"🚀 [STREAMER] Iniciando Job {job_id} ({total} líneas)")
 
         for i, raw_line in enumerate(commands):
+            # 1. Chequeo de parada ULTRARRÁPIDO
+            if cnc_manager.stop_event.is_set():
+                print(f"🛑 [STREAMER] STOP detectado en línea {i}. Abortando...")
+                aborted = True
+                break
+
+            # 2. Enviar línea al Arduino
             ser.write(f"{raw_line}\n".encode('ascii', errors='ignore'))
+            
+            # 3. Esperar 'ok' con timeout para no bloquear y permitir detección de parada
             while True:
+                if cnc_manager.stop_event.is_set():
+                    aborted = True
+                    break
+                
                 resp = ser.readline().decode(errors='ignore').strip()
                 if 'ok' in resp.lower():
                     break
-                time.sleep(0.005)
+            
+            if aborted: break
 
+            # 4. Enviar progreso a la interfaz
             current_pos = parse_axes(raw_line, current_pos)
             telemetry = {
                 'event': 'telemetry',
                 'x': current_pos['X'],
                 'y': current_pos['Y'],
                 'z': current_pos['Z'],
-                'progress': round((i / total) * 100),
+                'progress': round(((i + 1) / total) * 100),
                 'command': raw_line
             }
             yield f"data: {json.dumps(telemetry)}\n\n"
 
-        ser.close()
-        job.status = 'COMPLETED'
+        # SECUENCIA FINAL
+        if aborted:
+            print("🏠 [STREAMER] Ejecutando Retorno de Seguridad...")
+            ser.reset_input_buffer()
+            
+            # Función auxiliar para enviar y esperar ok en emergencia
+            def send_wait(cmd):
+                ser.write(cmd)
+                start_t = time.time()
+                while time.time() - start_t < 10: # Timeout de 10s por comando
+                    r = ser.readline().decode(errors='ignore').strip()
+                    if 'ok' in r.lower(): return True
+                return False
+
+            send_wait(b"M300 S50\n")   # Subir
+            send_wait(b"G0 X0 Y0\n")   # Regresar a casa (espera a que llegue)
+            ser.write(b"M5\nM18\n")    # Apagar todo
+
+            # ENVIAR TELEMETRÍA FINAL PARA DESBLOQUEAR UI
+            yield f"data: {json.dumps({'event': 'telemetry', 'x': 0.0, 'y': 0.0, 'z': 5.0, 'progress': 100, 'command': 'RETORNO A CASA COMPLETADO'})}\n\n"
+            
+            job.status = 'FAILED'
+            yield f"data: {json.dumps({'event': 'status', 'state': 'failed', 'message': 'EMERGENCIA: CNC en casa y apagada'})}\n\n"
+        else:
+            job.status = 'COMPLETED'
+            yield f"data: {json.dumps({'event': 'status', 'state': 'completed', 'message': 'Trabajo terminado'})}\n\n"
+
         job.completed_at = timezone.now()
         job.save()
-        yield f"data: {json.dumps({'event': 'status', 'state': 'completed'})}\n\n"
 
     except Exception as e:
+        print(f"❌ [STREAMER] Error crítico: {e}")
         job.status = 'FAILED'
         job.save()
         yield f"data: {json.dumps({'event': 'error', 'message': str(e)})}\n\n"
+    finally:
+        cnc_manager.is_running = False
+        print("🏁 [STREAMER] Hilo de ejecución liberado.")

@@ -11,6 +11,7 @@ const int penZUp = 140;
 const int penZDown = 118;
 
 const int penServoPin =10 ;
+const int SPINDLE_PIN = A4;
 
 const int stepsPerRevolution = 48; 
 
@@ -49,6 +50,8 @@ float Zpos = Zmax;
 boolean verbose = false;
 
 void setup() {
+  pinMode(SPINDLE_PIN, OUTPUT);
+  digitalWrite(SPINDLE_PIN, HIGH); // Start OFF (Active-Low)
   
   Serial.begin( 9600 );
   
@@ -66,16 +69,6 @@ void setup() {
   digitalWrite(16, LOW);
   
   Serial.println("Mini CNC Plotter alive and kicking!");
-  Serial.print("X range is from "); 
-  Serial.print(Xmin); 
-  Serial.print(" to "); 
-  Serial.print(Xmax); 
-  Serial.println(" mm."); 
-  Serial.print("Y range is from "); 
-  Serial.print(Ymin); 
-  Serial.print(" to "); 
-  Serial.print(Ymax); 
-  Serial.println(" mm."); 
 }
 
 void loop() 
@@ -95,18 +88,13 @@ void loop()
 
     while ( Serial.available()>0 ) {
       c = Serial.read();
+
       if (( c == '\n') || (c == '\r') ) {             
         if ( lineIndex > 0 ) {                       
           line[ lineIndex ] = '\0';                  
-          if (verbose) { 
-            Serial.print( "Received : "); 
-            Serial.println( line ); 
-          }
           processIncomingLine( line, lineIndex );
           lineIndex = 0;
         } 
-        else { 
-        }
         lineIsComment = false;
         lineSemiColon = false;
         Serial.println("ok");    
@@ -148,6 +136,7 @@ void processIncomingLine( char* line, int charNB ) {
     resetPlotter();
     return;
   }
+  
   int currentIndex = 0;
   char buffer[ 64 ];           
   struct point newPos;
@@ -165,8 +154,6 @@ void processIncomingLine( char* line, int charNB ) {
       break;
     case 'G':
       buffer[0] = line[ currentIndex++ ];          
-      //      buffer[1] = line[ currentIndex++ ];
-      //      buffer[2] = '\0';
       buffer[1] = '\0';
 
       switch ( atoi( buffer ) ){                  
@@ -199,76 +186,42 @@ void processIncomingLine( char* line, int charNB ) {
       buffer[2] = line[ currentIndex++ ];
       buffer[3] = '\0';
       switch ( atoi( buffer ) ){
+      case 3:
+        digitalWrite(SPINDLE_PIN, LOW); // ON
+        break;
+      case 5:
+        digitalWrite(SPINDLE_PIN, HIGH); // OFF
+        break;
+      case 18:
+      case 84:
+        digitalWrite(SPINDLE_PIN, HIGH);
+        myStepperX.release();
+        myStepperY.release();
+        break;
       case 300:
         {
           char* indexS = strchr( line+currentIndex, 'S' );
-          float Spos = atof( indexS + 1);
-          if (Spos == 30) { 
-            penDown(); 
-          }
-          if (Spos == 50) { 
-            penUp(); 
+          if (indexS != NULL) {
+            float Spos = atof( indexS + 1);
+            if (Spos <= 35) penDown(); 
+            if (Spos >= 45) penUp(); 
           }
           break;
         }
       case 114:                       
-        Serial.print( "Absolute position : X = " );
-        Serial.print( actuatorPos.x );
-        Serial.print( "  -  Y = " );
-        Serial.println( actuatorPos.y );
+        Serial.print( "X:" ); Serial.print( actuatorPos.x );
+        Serial.print( " Y:" ); Serial.println( actuatorPos.y );
         break;
-      default:
-        Serial.print( "Command not recognized : M");
-        Serial.println( buffer );
       }
     }
   }
-
-
-
 }
 
 void drawLine(float x1, float y1) {
-
-  if (verbose)
-  {
-    Serial.print("fx1, fy1: ");
-    Serial.print(x1);
-    Serial.print(",");
-    Serial.print(y1);
-    Serial.println("");
-  }  
-
-  if (x1 >= Xmax) { 
-    x1 = Xmax; 
-  }
-  if (x1 <= Xmin) { 
-    x1 = Xmin; 
-  }
-  if (y1 >= Ymax) { 
-    y1 = Ymax; 
-  }
-  if (y1 <= Ymin) { 
-    y1 = Ymin; 
-  }
-
-  if (verbose)
-  {
-    Serial.print("Xpos, Ypos: ");
-    Serial.print(Xpos);
-    Serial.print(",");
-    Serial.print(Ypos);
-    Serial.println("");
-  }
-
-  if (verbose)
-  {
-    Serial.print("x1, y1: ");
-    Serial.print(x1);
-    Serial.print(",");
-    Serial.print(y1);
-    Serial.println("");
-  }
+  if (x1 >= Xmax) x1 = Xmax; 
+  if (x1 <= Xmin) x1 = Xmin; 
+  if (y1 >= Ymax) y1 = Ymax; 
+  if (y1 <= Ymin) y1 = Ymin; 
 
   x1 = (int)(x1*StepsPerMillimeterX);
   y1 = (int)(y1*StepsPerMillimeterY);
@@ -285,6 +238,9 @@ void drawLine(float x1, float y1) {
 
   if (dx > dy) {
     for (i=0; i<dx; ++i) {
+      if (Serial.available() > 0 && Serial.peek() == '!') {
+        return; 
+      }
       myStepperX.onestep(sx,STEP);
       over+=dy;
       if (over>=dx) {
@@ -296,6 +252,9 @@ void drawLine(float x1, float y1) {
   }
   else {
     for (i=0; i<dy; ++i) {
+      if (Serial.available() > 0 && Serial.peek() == '!') {
+        return; 
+      }
       myStepperY.onestep(sy,STEP);
       over+=dx;
       if (over>=dy) {
@@ -305,26 +264,6 @@ void drawLine(float x1, float y1) {
       delay(StepDelay);
     }    
   }
-
-  if (verbose)
-  {
-    Serial.print("dx, dy:");
-    Serial.print(dx);
-    Serial.print(",");
-    Serial.print(dy);
-    Serial.println("");
-  }
-
-  if (verbose)
-  {
-    Serial.print("Going to (");
-    Serial.print(x0);
-    Serial.print(",");
-    Serial.print(y0);
-    Serial.println(")");
-  }
-
-  delay(LineDelay);
   Xpos = x1;
   Ypos = y1;
 }
@@ -333,24 +272,11 @@ void penUp() {
   penServo.write(penZUp); 
   delay(penDelay); 
   Zpos=Zmax; 
-  digitalWrite(15, LOW);
-    digitalWrite(16, HIGH);
-  if (verbose) { 
-    Serial.println("Pen up!"); 
-    
-  } 
 }
 void penDown() { 
   penServo.write(penZDown); 
   delay(penDelay); 
   Zpos=Zmin; 
-  digitalWrite(15, HIGH);
-    digitalWrite(16, LOW);
-  if (verbose) { 
-    Serial.println("Pen down."); 
-    
-    
-  } 
 }
 
 void resetPlotter() {
